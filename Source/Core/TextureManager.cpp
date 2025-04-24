@@ -3,9 +3,6 @@
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Common/DescriptorHandle.h"
 
-TextureManager::TextureManager(){}
-TextureManager::~TextureManager() {}
-
 void TextureManager::Initialize(DirectXCommon* dxCommon, LogManager* logManager) {
 	dxCommon_ = dxCommon;
 	logManager_ = logManager;

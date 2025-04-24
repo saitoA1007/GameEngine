@@ -10,10 +10,6 @@
 
 using namespace Microsoft::WRL;
 
-DirectXCommon::DirectXCommon() {}
-
-DirectXCommon::~DirectXCommon() {}
-
 void DirectXCommon::Initialize(HWND hwnd, uint32_t width, uint32_t height, LogManager* logManager)
 {
     // ログを所得

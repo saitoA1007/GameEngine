@@ -89,6 +89,18 @@
     <ClCompile Include="Source\2D\ImGuiManager.cpp">
       <Filter>Source\2D</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Input\InPut.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\AudioManager.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\2D\Sprite.cpp">
+      <Filter>Source\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\3D\DebugCamera.cpp">
+      <Filter>Source\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\WindowsApp.h">
@@ -186,6 +198,18 @@
     </ClInclude>
     <ClInclude Include="Source\2D\ImGuiManager.h">
       <Filter>Source\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\InPut.h">
+      <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\AudioManager.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\2D\Sprite.h">
+      <Filter>Source\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\3D\DebugCamera.h">
+      <Filter>Source\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

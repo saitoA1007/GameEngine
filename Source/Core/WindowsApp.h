@@ -5,8 +5,8 @@
 
 class WindowsApp {
 public:
-	WindowsApp();
-	~WindowsApp();
+	WindowsApp() = default;
+	~WindowsApp() = default;
 
 	// ウィンドウサイズ
 	static const int32_t kWindowWidth = 1280;
