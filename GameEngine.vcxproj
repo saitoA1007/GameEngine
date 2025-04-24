@@ -101,9 +101,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\2D\ImGuiManager.cpp" />
+    <ClCompile Include="Source\3D\Camera.cpp" />
+    <ClCompile Include="Source\3D\DirectionalLight.cpp" />
+    <ClCompile Include="Source\3D\Model.cpp" />
     <ClCompile Include="Source\Common\LogManager.cpp" />
     <ClCompile Include="Source\Core\DirectXCommon.cpp" />
+    <ClCompile Include="Source\Core\GraphicsPipeline.cpp" />
+    <ClCompile Include="Source\Core\TextureManager.cpp" />
     <ClCompile Include="Source\Core\WindowsApp.cpp" />
+    <ClCompile Include="Source\Math\MyMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -114,14 +121,30 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\2D\ImGuiManager.h" />
+    <ClInclude Include="Source\3D\Camera.h" />
+    <ClInclude Include="Source\3D\DirectionalLight.h" />
+    <ClInclude Include="Source\3D\Material.h" />
+    <ClInclude Include="Source\3D\Model.h" />
+    <ClInclude Include="Source\3D\VertexData.h" />
     <ClInclude Include="Source\Common\ConvertString.h" />
+    <ClInclude Include="Source\Common\CrashHandle.h" />
+    <ClInclude Include="Source\Common\CreateBufferResource.h" />
     <ClInclude Include="Source\Common\DepthStencilTexture.h" />
     <ClInclude Include="Source\Common\DescriptorHandle.h" />
     <ClInclude Include="Source\Common\DescriptorHeap.h" />
     <ClInclude Include="Source\Common\LogManager.h" />
     <ClInclude Include="Source\Common\ResourceLeakChecker.h" />
     <ClInclude Include="Source\Core\DirectXCommon.h" />
+    <ClInclude Include="Source\Core\GraphicsPipeline.h" />
+    <ClInclude Include="Source\Core\TextureManager.h" />
     <ClInclude Include="Source\Core\WindowsApp.h" />
+    <ClInclude Include="Source\Math\Matrix4x4.h" />
+    <ClInclude Include="Source\Math\MyMath.h" />
+    <ClInclude Include="Source\Math\TransformationMatrix.h" />
+    <ClInclude Include="Source\Math\Vector2.h" />
+    <ClInclude Include="Source\Math\Vector3.h" />
+    <ClInclude Include="Source\Math\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
@@ -130,6 +153,23 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ProjectReference Include="..\CG2_2_0\externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Source\Shader\Object3d.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Object3d.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Shader\Object3d.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
