@@ -16,9 +16,6 @@ public:
     // 初期化
     void Initialize(ID3D12Device* device, LogManager* logManager);
 
-    // 解放処理
-    void Finalize();
-
     ID3D12PipelineState* GetPipelineState() { return graphicsPipelineState_.Get(); }
     ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 
