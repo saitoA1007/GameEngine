@@ -8,8 +8,8 @@
 
 class DirectXCommon {
 public:
-    DirectXCommon();
-    ~DirectXCommon();
+    DirectXCommon()=default;
+    ~DirectXCommon()=default;
 
     // 初期化
     void Initialize(HWND hwnd, uint32_t width, uint32_t height, LogManager* logManager);

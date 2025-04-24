@@ -10,8 +10,8 @@
 class GraphicsPipeline {
 public:
 
-    // シングルインスタンス
-    static GraphicsPipeline* GetInstance();
+    GraphicsPipeline() = default;
+    ~GraphicsPipeline() = default;
 
     // 初期化
     void Initialize(ID3D12Device* device, LogManager* logManager);
@@ -23,9 +23,6 @@ public:
     ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 
 private:
-
-    GraphicsPipeline() = default;
-    ~GraphicsPipeline() = default;
     GraphicsPipeline(const GraphicsPipeline&) = delete;
     GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
 

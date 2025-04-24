@@ -3,11 +3,6 @@
 #include<format>
 #include <cassert>
 
-GraphicsPipeline* GraphicsPipeline::GetInstance() {
-	static GraphicsPipeline instance;
-	return &instance;
-}
-
 void GraphicsPipeline::Initialize(ID3D12Device* device, LogManager* logManager) {
 
 	// ログを取得

@@ -12,8 +12,8 @@
 
 class TextureManager {
 public:
-	TextureManager();
-	~TextureManager();
+	TextureManager() = default;
+	~TextureManager() = default;
 
 	// テクスチャ
 	struct Texture {
