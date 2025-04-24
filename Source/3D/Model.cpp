@@ -8,14 +8,6 @@
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
 
-Model::Model() {}
-Model::~Model() {
-	//if (vertexResource_) vertexResource_.Reset();
-	//if (indexResource_) indexResource_.Reset();
-	//if (materialResource_) materialResource_.Reset();
-	//if (transformationMatrixResource_) transformationMatrixResource_.Reset();
-}
-
 void Model::StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList) {
 	device_ = device;
 	commandList_ = commandList;
@@ -111,16 +103,14 @@ Model* Model::CreateSphere(uint32_t subdivision) {
 	// マテリアルリソースを作成
 	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
 	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	// マテリアルにデータを書き込む
-	Material* materialData = nullptr;
 	// 書き込むためのアドレスを取得
-	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
 	// 白色に設定
-	materialData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// Lightingするのでtureに設定する
-	materialData->enableLighting = true;
+	model->materialData_->enableLighting = true;
 	// UVTransform行列を初期化
-	materialData->uvTransform = MakeIdentity4x4();
+	model->materialData_->uvTransform = MakeIdentity4x4();
 
 	// トランスフォーメーション行列リソースを作成
 	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
@@ -163,16 +153,14 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	// マテリアルリソースを作成
 	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
 	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	// マテリアルにデータを書き込む
-	Material* materialData = nullptr;
 	// 書き込むためのアドレスを取得
-	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
 	// 白色に設定
-	materialData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// Lightingするのでtureに設定する
-	materialData->enableLighting = false;
+	model->materialData_->enableLighting = false;
 	// UVTransform行列を初期化
-	materialData->uvTransform = MakeIdentity4x4();
+	model->materialData_->uvTransform = MakeIdentity4x4();
 
 	// トランスフォーメーション行列リソースを作成
 	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
@@ -302,4 +290,16 @@ Model::MaterialData Model::LoadMaterialTemplateFile(const std::string& directory
 
 void Model::SetTransformationMatrix(const Matrix4x4& worldMatrix) {
 	this->transformationMatrixData_->WVP = worldMatrix;
+}
+
+void Model::SetColor(const Vector4& color) {
+	this->materialData_->color = color;
+}
+
+void Model::SetLightOn(const bool isLightOn) {
+	this->materialData_->enableLighting = isLightOn;
+}
+
+void Model::SetUvMatrix(const Matrix4x4& uvMatrix) {
+	this->materialData_->uvTransform = uvMatrix;
 }

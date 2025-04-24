@@ -17,8 +17,6 @@ public:
     void PreDraw(ID3D12RootSignature* rootSignature, ID3D12PipelineState* graphicsPipelineState);
     // 描画後処理
     void PostDraw();
-    // 解放処理
-    void Finalize();
 
 public:
     ID3D12Device* GetDevice() const { return device_.Get(); }

@@ -101,35 +101,6 @@ void DirectXCommon::PostDraw()
     assert(SUCCEEDED(hr));
 }
 
-void DirectXCommon::Finalize() {
-
-    WaitForGPU();
-
-    // リソース
-    depthStencilResource_.Reset();
-    swapChainResources_[0].Reset();
-    swapChainResources_[1].Reset();
-    // ヒープ
-    dsvHeap_.Reset();
-    rtvHeap_.Reset();
-    srvHeap_.Reset();
-    // コマンド
-    commandList_.Reset();
-    commandAllocator_.Reset();
-    commandQueue_.Reset();
-    // スワップチェーン
-    swapChain_.Reset();
-    // フェンス
-    fence_.Reset();
-    CloseHandle(fenceEvent_);
-    dxgiFactory_.Reset();
-    device_.Reset();
-    //useAdapter_->Release();
-#ifdef _DEBUG
- //debugController->Release();
-#endif 
-}
-
 void DirectXCommon::CreateDevice()
 {
 #ifdef _DEBUG

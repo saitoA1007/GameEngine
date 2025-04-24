@@ -30,6 +30,11 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
+	//============================================================
+	// エンジン部分の初期化処理
+	//============================================================
+
+#pragma region 
 	// 誰も補足しなかった場合に(Unhandled)、補足する関数を登録
 	SetUnhandledExceptionFilter(ExportDump);
 
@@ -40,10 +45,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// ウィンドウの作成
 	std::shared_ptr<WindowsApp> windowsApp = std::make_shared<WindowsApp>();
 	windowsApp->CreateGameWindow(L"CG2", 1280, 720);
-
-	// 入力処理を初期化
-	std::shared_ptr<Input> input = std::make_shared<Input>();
-	input->Initialize(hInstance, windowsApp->GetHwnd());
 
 	// リソースチェックのデバック
 	D3DResourceLeakChecker leakCheck;
@@ -56,23 +57,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	std::shared_ptr<GraphicsPipeline> graphicsPipeline = std::make_shared<GraphicsPipeline>();
 	graphicsPipeline->Initialize(dxCommon->GetDevice(), logManager.get());
 
-	// 画像の初期化
-	Sprite::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), windowsApp->kWindowWidth, windowsApp->kWindowHeight);
-
-	// 3dを描画する処理の初期化
-	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
-
 	// ImGuiの初期化
 	std::shared_ptr<ImGuiManager> imGuiManager = std::make_shared<ImGuiManager>();
 	imGuiManager->Initialize(windowsApp.get(), dxCommon.get());
+
+	// 入力処理を初期化
+	std::shared_ptr<Input> input = std::make_shared<Input>();
+	input->Initialize(hInstance, windowsApp->GetHwnd());
+
+	// 音声の初期化
+	std::shared_ptr<AudioManager> audioManager = std::make_shared<AudioManager>();
+	audioManager->Initialize();
 
 	// テクスチャの初期化
 	std::shared_ptr<TextureManager> textureManager = std::make_shared<TextureManager>();
 	textureManager->Initialize(dxCommon.get(), logManager.get());
 
-	// 音声の初期化
-	std::shared_ptr<AudioManager> audioManager = std::make_shared<AudioManager>();
-	audioManager->Initialize();
+	// 画像の初期化
+	Sprite::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), windowsApp->kWindowWidth, windowsApp->kWindowHeight);
+
+	// 3dを描画する処理の初期化
+	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
+#pragma endregion
 
 	//=================================================================
 	// 宣言と初期化
@@ -89,8 +95,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	DebugCamera debugCamera;
 	debugCamera.Initialize(windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 
-	// モデル
+	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Model* axis = Model::CreateFromOBJ("axis.obj", "Axis/");
 	axis->SetTransformationMatrix(camera.MakeWVPMatrix(worldMatrix));
@@ -127,6 +134,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		// imgui
 		ImGui::Begin("DebugWindow");
 		// モデルの操作
+		ImGui::ColorEdit3("ModelColor", &color.x);
+		axis->SetColor(color);
 		ImGui::DragFloat3("UVTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
 		ImGui::DragFloat3("UVrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
 		ImGui::DragFloat3("UVScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
@@ -162,24 +171,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		dxCommon->PostDraw();
 	}
 
+	// 3Dモデルの解放処理
 	delete axis;
 
 	/// 解放処理
 
 	// テクスチャの解放
 	textureManager->Finalize();
-
 	// ImGuiの解放処理
 	imGuiManager->Finalize();
-
-	// GraphicsPipeline解放
-	graphicsPipeline->Finalize();
-
-	// DirectXCommonの解放処理
-	dxCommon->Finalize();
-
 	// WindowAppの解放
 	windowsApp->BreakGameWindow();
-
 	return 0;
 }

@@ -31,8 +31,8 @@ public:
 	};
 
 public:
-	Model();
-	~Model();
+	Model() = default;
+	~Model() = default;
 
 	/// <summary>
 	/// 静的初期化
@@ -58,16 +58,34 @@ public:
 	void Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandlesGPU, const Matrix4x4& VPMatrix);
 
 	/// <summary>
-	/// 移動処理
+	/// 3Dモデル移動処理
 	/// </summary>
 	/// <param name="worldMatrix"></param>
 	void SetTransformationMatrix(const Matrix4x4& worldMatrix);
+
+	/// <summary>
+	/// 3Dモデルの色を変更
+	/// </summary>
+	/// <param name="color"></param>
+	void SetColor(const Vector4& color);
+
+	/// <summary>
+	/// ライトを当てるか決める処理
+	/// </summary>
+	/// <param name="isLightOn">trueでライトが点く</param>
+	void SetLightOn(const bool isLightOn);
+
+	/// <summary>
+	/// UV座標を変更する処理
+	/// </summary>
+	/// <param name="uvMatrix"></param>
+	void SetUvMatrix(const Matrix4x4& uvMatrix);
 
 private:
 
 	// OBJファイル読み込み
 	ModelData LoadObjeFile(const std::string& directoryPath, const std::string& objFilename, const std::string& filename);
-
+	
 	// mtlファイルを読み込み
 	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
@@ -93,6 +111,8 @@ private:
 	uint32_t totalIndices_ = 0;
 
 	TransformationMatrix* transformationMatrixData_ = nullptr;
+	// マテリアルにデータを書き込む
+	Material* materialData_ = nullptr;
 
 	// 生成したモデル名
 	uint32_t modelname_ = 0;

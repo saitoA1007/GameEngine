@@ -150,11 +150,6 @@ void GraphicsPipeline::Initialize(ID3D12Device* device, LogManager* logManager) 
 	assert(SUCCEEDED(hr));
 }
 
-void GraphicsPipeline::Finalize() {
-	rootSignature_.Reset();
-	graphicsPipelineState_.Reset();
-}
-
 Microsoft::WRL::ComPtr<IDxcBlob> GraphicsPipeline::CompileShader(
 	// CompilerするShaderファイルへのパス
 	const std::wstring& filePath,
