@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	Sprite::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 
 	// 3dを描画する処理の初期化
-	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), logManager.get());
+	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), textureManager.get(), logManager.get());
 #pragma endregion
 
 	//=================================================================
@@ -171,13 +171,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		// 平行根源の操作
 		if (ImGui::TreeNode("Light")) {
 			// 光の色を変更
-			ImGui::ColorEdit3("Light_Color", &lightColor.x);
+			ImGui::ColorEdit3("LightColor", &lightColor.x);
 			directionalLight->SetLightColor(lightColor);
 			// 光の方向を変更
-			ImGui::SliderFloat3("Light_Direction", &lightDir.x, -1.0f, 1.0f);
+			ImGui::SliderFloat3("LightDirection", &lightDir.x, -1.0f, 1.0f);
 			directionalLight->SetLightDir(lightDir);
 			// 光の強度を変更
-			ImGui::SliderFloat("Light_Intensity", &intensity, 0.0f, 10.0f);
+			ImGui::SliderFloat("LightIntensity", &intensity, 0.0f, 10.0f);
 			directionalLight->SetLightIntensity(intensity);
 			ImGui::TreePop();
 		}
@@ -195,11 +195,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 
 		// Axisモデルを描画
-		axis->Draw(worldMatrix, directionalLight->GetResource(), &textureManager->GetTextureSrvHandlesGPU(uvCheckerGH), debugCamera.GetVPMatrix());
+		axis->Draw(worldMatrix, directionalLight->GetResource(), uvCheckerGH, debugCamera.GetVPMatrix());
 
 		// Cubeモデルを描画
-		cube->Draw(worldMatrixCube, directionalLight->GetResource(), &textureManager->GetTextureSrvHandlesGPU(cubeGH), debugCamera.GetVPMatrix());
-
+		cube->Draw(worldMatrixCube, directionalLight->GetResource(), cubeGH, debugCamera.GetVPMatrix());
 
 		// ImGuiの描画処理
 		imGuiManager->Draw();

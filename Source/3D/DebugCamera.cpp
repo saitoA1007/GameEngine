@@ -17,13 +17,6 @@ void DebugCamera::Update(Input* input) {
 		Matrix4x4 rotateY = MakeRotateYMatrix(-delta.x * 0.01f);
 
 		rotateMatrix_ = Multiply(rotateMatrix_, Multiply(rotateX, rotateY));
-
-		Vector3 localCameraPos = { 0.0f, 0.0f, -distance };
-		translate_ = Transforms(localCameraPos, rotateMatrix_);
-		
-		translate_.x += target.x;
-		translate_.y += target.y;
-		translate_.z += target.z;
 	}
 
 	Vector3 move = { 0.0f, 0.0f, 0.0f };
@@ -64,16 +57,10 @@ void DebugCamera::Update(Input* input) {
 		translate_.x += rotatedX * speed;
 		translate_.y += move.y * speed; // Yはそのまま
 		translate_.z += rotatedZ * (speed + 0.05f);
-
-		target.x += rotatedX * speed;;
-		target.y += move.y * speed; // Yはそのま;
-		target.z += rotatedZ * (speed + 0.05f);
-
-		distance = Length(Subtract(translate_, target));
 	}
 
 	// ワールド行列
-	Matrix4x4 worldMatrix = Multiply(rotateMatrix_,MakeTranslateMatrix(translate_));
+	Matrix4x4 worldMatrix = Multiply(MakeTranslateMatrix(translate_),rotateMatrix_);
 
 	// カメラの変更した内容を適用する処理
 	viewMatrix_ = InverseMatrix(worldMatrix);
