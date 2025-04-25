@@ -125,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Source\2D\ImGuiManager.h" />
     <ClInclude Include="Source\2D\Sprite.h" />
     <ClInclude Include="Source\3D\Camera.h" />

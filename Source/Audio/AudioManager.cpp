@@ -1,5 +1,6 @@
 #include"AudioManager.h"
 #include<cassert>
+using namespace GameEngine;
 
 AudioManager::~AudioManager() {}
 

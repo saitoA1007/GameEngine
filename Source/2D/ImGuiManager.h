@@ -6,33 +6,36 @@
 #include"Source/Core/WindowsApp.h"
 #include"Source/Core/DirectXCommon.h"
 
-class ImGuiManager {
-public:
+namespace GameEngine {
 
-	ImGuiManager();
-	~ImGuiManager();
+	class ImGuiManager {
+	public:
 
-	void Initialize(WindowsApp* windowsApp, DirectXCommon* dxCommon);
+		ImGuiManager();
+		~ImGuiManager();
 
-	void BeginFrame();
+		void Initialize(WindowsApp* windowsApp, DirectXCommon* dxCommon);
 
-	void EndFrame();
+		void BeginFrame();
 
-	void Draw();
+		void EndFrame();
 
-	void Finalize();
+		void Draw();
 
-private:
-	//ImGuiManager() = default;
-	//~ImGuiManager() = default;
-	ImGuiManager(const ImGuiManager&) = delete;
-	const ImGuiManager& operator=(const ImGuiManager&) = delete;
+		void Finalize();
 
-	WindowsApp* windowsApp_ = nullptr;
-	DirectXCommon* dxCommon_ = nullptr;
+	private:
+		//ImGuiManager() = default;
+		//~ImGuiManager() = default;
+		ImGuiManager(const ImGuiManager&) = delete;
+		const ImGuiManager& operator=(const ImGuiManager&) = delete;
 
-	// ビューポート
-	D3D12_VIEWPORT viewport_{};
-	// シザー矩形
-	D3D12_RECT scissorRect_{};
-};
+		WindowsApp* windowsApp_ = nullptr;
+		DirectXCommon* dxCommon_ = nullptr;
+
+		// ビューポート
+		D3D12_VIEWPORT viewport_{};
+		// シザー矩形
+		D3D12_RECT scissorRect_{};
+	};
+}

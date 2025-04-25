@@ -3,31 +3,36 @@
 #include"Source/Math/Vector3.h"
 #include"Source/Math/MyMath.h"
 
-class Camera {
-public:
+namespace GameEngine {
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(Transform transform, int kClientWidth, int kClientHeight);
+	class Camera {
+	public:
 
-	/// <summary>
-	/// カメラの位置を変更
-	/// </summary>
-	/// <param name="transform"></param>
-	void SetCameraPosition(Transform transform);
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize(Transform transform, int kClientWidth, int kClientHeight);
 
-	Matrix4x4 MakeWVPMatrix(Matrix4x4 worldMatrix);
+		/// <summary>
+		/// カメラの位置を変更
+		/// </summary>
+		/// <param name="transform"></param>
+		void SetCameraPosition(Transform transform);
 
-	Matrix4x4 GetViewMatrix() { return viewMatrix_; }
-	Matrix4x4 GetProjectionMatrix() { return projectionMatrix_; }
+		Matrix4x4 MakeWVPMatrix(Matrix4x4 worldMatrix);
 
-	Matrix4x4 GetVPMatrix();
-private:
+		Matrix4x4 GetViewMatrix() { return viewMatrix_; }
+		Matrix4x4 GetProjectionMatrix() { return projectionMatrix_; }
 
-	Matrix4x4 cameraMatrix_;
-	Matrix4x4 viewMatrix_;
-	Matrix4x4 projectionMatrix_;
-	Matrix4x4 VPMatrix_;
-	Matrix4x4 WVPMatrix_;
-};
+		Matrix4x4 GetVPMatrix();
+
+		void SetVPMatrix(Matrix4x4 VPMatrix);
+	private:
+
+		Matrix4x4 cameraMatrix_;
+		Matrix4x4 viewMatrix_;
+		Matrix4x4 projectionMatrix_;
+		Matrix4x4 VPMatrix_;
+		Matrix4x4 WVPMatrix_;
+	};
+}

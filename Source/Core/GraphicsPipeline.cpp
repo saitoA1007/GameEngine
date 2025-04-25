@@ -2,6 +2,7 @@
 #include"Source/Common/ConvertString.h"
 #include<format>
 #include <cassert>
+using namespace GameEngine;
 
 void GraphicsPipeline::Initialize(ID3D12Device* device, LogManager* logManager) {
 

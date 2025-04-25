@@ -1,5 +1,6 @@
 #include"Sprite.h"
 #include"Source/Common/CreateBufferResource.h"
+using namespace GameEngine;
 
 ID3D12Device* Sprite::device_ = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;

@@ -1,7 +1,9 @@
 #include"DebugCamera.h"
 #include"Source/Math/MyMath.h"
+using namespace GameEngine;
 
-void DebugCamera::Initialize(int width, int height) {
+void DebugCamera::Initialize(const Vector3& translate,int width, int height) {
+	translate_ = translate;
 	viewMatrix_ = InverseMatrix(MakeAffineMatrix(scale_, rotate_, translate_));
 	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
 	rotateMatrix_ = MakeIdentity4x4();

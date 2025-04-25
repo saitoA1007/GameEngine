@@ -1,6 +1,7 @@
 #include"DirectionalLight.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Math/MyMath.h"
+using namespace GameEngine;
 
 void DirectionalLight::Initialize(ID3D12Device* device) {
 	// 平行光源のリソースを作る。
