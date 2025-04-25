@@ -14,6 +14,8 @@ public:
 	};
 
 public:
+	DirectionalLight() = default;
+	~DirectionalLight() = default;
 
 	/// <summary>
 	/// 初期化
