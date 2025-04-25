@@ -87,10 +87,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// 画像をロード
 	uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
 	uint32_t monsterBallGH = textureManager->Load("Resources/monsterBall.png");
+	uint32_t cubeGH = textureManager->Load("Resources/cube/cube.jpg");
 
 	// カメラ
 	Camera camera;
-	camera.Initialize({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} }, windowsApp->kWindowWidth, windowsApp->kWindowHeight);
+	camera.Initialize({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-20.0f} }, windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 	// デバックカメラ
 	DebugCamera debugCamera;
 	debugCamera.Initialize(windowsApp->kWindowWidth, windowsApp->kWindowHeight);
@@ -98,16 +99,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+	bool isAxisLightOn = false;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Model* axis = Model::CreateFromOBJ("axis.obj", "Axis/");
 	axis->SetTransformationMatrix(camera.MakeWVPMatrix(worldMatrix));
+
+	// 3Dモデル
+	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{2.0f,0.0f,0.0f} };
+	Vector4 colorCube = { 1.0f,1.0f,1.0f,1.0f };
+	bool isCubeLightOn = false;
+	Matrix4x4 worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
+	Model* cube = Model::CreateFromOBJ("cube.obj", "cube/");
+	cube->SetTransformationMatrix(camera.MakeWVPMatrix(worldMatrixCube));
 	
 	// 平行根源
-	DirectionalLight directionalLight;
-	directionalLight.Initialize(dxCommon->GetDevice());
-	Vector4 lightColor = directionalLight.GetLightColor();
-	Vector3 lightDir = directionalLight.GetLightDir();
-	float intensity = directionalLight.GetLightIntensity();
+	DirectionalLight* directionalLight = new DirectionalLight();
+	directionalLight->Initialize(dxCommon->GetDevice());
+	Vector4 lightColor = directionalLight->GetLightColor();
+	Vector3 lightDir = directionalLight->GetLightDir();
+	float intensity = directionalLight->GetLightIntensity();
 
 	//=========================================================================
 	// メインループ
@@ -134,21 +144,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		// imgui
 		ImGui::Begin("DebugWindow");
 		// モデルの操作
-		ImGui::ColorEdit3("ModelColor", &color.x);
+		ImGui::ColorEdit3("AxisModelColor", &color.x);
 		axis->SetColor(color);
-		ImGui::DragFloat3("UVTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("UVrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("UVScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
+		ImGui::Checkbox("AxisLight", &isAxisLightOn);
+		axis->SetLightOn(isAxisLightOn);
+		ImGui::DragFloat3("AxisTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
+		ImGui::DragFloat3("Axisrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
+		ImGui::DragFloat3("AxisScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
 		worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 		// 光の色を変更
 		ImGui::ColorEdit3("Light_Color", &lightColor.x);
-		directionalLight.SetLightColor(lightColor);
+		directionalLight->SetLightColor(lightColor);
 		// 光の方向を変更
 		ImGui::SliderFloat3("Light_Direction", &lightDir.x, -1.0f, 1.0f);
-		directionalLight.SetLightDir(lightDir);
+		directionalLight->SetLightDir(lightDir);
 		// 光の強度を変更
 		ImGui::SliderFloat("Light_Intensity", &intensity, 0.0f, 10.0f);
-		directionalLight.SetLightIntensity(intensity);
+		directionalLight->SetLightIntensity(intensity);
+
+		// モデルの操作
+		ImGui::ColorEdit3("CubeModelColor", &colorCube.x);
+		cube->SetColor(colorCube);
+		ImGui::Checkbox("CubeLight", &isCubeLightOn);
+		cube->SetLightOn(isCubeLightOn);
+		ImGui::DragFloat3("CubeTranslate", &transformCube.translate.x, 0.01f, -10.0f, 10.0f);
+		ImGui::DragFloat3("Cuberotate", &transformCube.rotate.x, 0.01f, -10.0f, 10.0f);
+		ImGui::DragFloat3("CubeScale", &transformCube.scale.x, 0.01f, -10.0f, 10.0f);
+		worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
 		ImGui::End();
 
 		//====================================================================
@@ -161,8 +183,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		dxCommon->PreDraw(graphicsPipeline->GetRootSignature(), graphicsPipeline->GetPipelineState());
 
 
-		// 3Dモデルを描画
-		axis->Draw(worldMatrix, directionalLight.GetResource(), &textureManager->GetTextureSrvHandlesGPU(uvCheckerGH), debugCamera.GetVPMatrix());
+		// Axisモデルを描画
+		axis->Draw(worldMatrix, directionalLight->GetResource(), &textureManager->GetTextureSrvHandlesGPU(uvCheckerGH), debugCamera.GetVPMatrix());
+
+		// Cubeモデルを描画
+		cube->Draw(worldMatrixCube, directionalLight->GetResource(), &textureManager->GetTextureSrvHandlesGPU(cubeGH), debugCamera.GetVPMatrix());
 
 
 		// ImGuiの描画処理
@@ -171,8 +196,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		dxCommon->PostDraw();
 	}
 
-	// 3Dモデルの解放処理
+	// 3Dモデルの解放
 	delete axis;
+	delete cube;
+
+	// ライトの解放
+	delete directionalLight;
 
 	/// 解放処理
 
