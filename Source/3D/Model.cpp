@@ -7,10 +7,12 @@
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
+LogManager* Model::logManager_ = nullptr;
 
-void Model::StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList) {
+void Model::StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList,LogManager* logManager) {
 	device_ = device;
 	commandList_ = commandList;
+	logManager_ = logManager;
 }
 
 Model* Model::CreateSphere(uint32_t subdivision) {
@@ -125,11 +127,20 @@ Model* Model::CreateSphere(uint32_t subdivision) {
 	return model;
 }
 
+
+
 Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& filename) {
+
+	if (logManager_) {
+		logManager_->Log("\nCreateFromOBJ : Start loading OBJ file: " + filename + objFilename);
+	}
 
 	Model* model = new Model();
 
 	// データを読み込む処理
+	if (logManager_) {
+		logManager_->Log("CreateFromOBJ : Loading OBJ file data");
+	}
 	ModelData modelData = model->LoadObjeFile("Resources", objFilename, filename);
 
 	// モデル名を代入
@@ -139,6 +150,9 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	model->totalIndices_ = UINT(modelData.vertices.size());
 
 	// 頂点リソースを作る
+	if (logManager_) {
+		logManager_->Log("CreateFromOBJ : Creating vertexResource");
+	}
 	model->vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData.vertices.size());
 	// 頂点バッファビューを作成する
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();// リソースの先頭のアドレスから使う
@@ -151,6 +165,9 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());// 頂点データをリソースにコピー
 
 	// マテリアルリソースを作成
+	if (logManager_) {
+		logManager_->Log("CreateFromOBJ : Creating materialResource");
+	}
 	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
 	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
 	// 書き込むためのアドレスを取得
@@ -163,6 +180,9 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	model->materialData_->uvTransform = MakeIdentity4x4();
 
 	// トランスフォーメーション行列リソースを作成
+	if (logManager_) {
+		logManager_->Log("CreateFromOBJ : Creating transformationMatrixResource");
+	}
 	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
 	model->transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 	// データを書き込む
@@ -171,6 +191,11 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	// 単位行列を書き込んでおく
 	model->transformationMatrixData_->WVP = MakeIdentity4x4();
 	model->transformationMatrixData_->World = MakeIdentity4x4();
+
+	// OBJが無事に作成されたログを出す
+	if (logManager_) {
+		logManager_->Log("CreateFromOBJ : Success loaded OBJ file: " + filename + objFilename);
+	}
 
 	return model;
 }
