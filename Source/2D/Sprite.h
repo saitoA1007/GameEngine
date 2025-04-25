@@ -6,7 +6,7 @@
 #include"Source/Math/Vector2.h"
 #include"Source/Math/Vector4.h"
 #include"Source/Math/TransformationMatrix.h"
-#include"Source/Math/MyMath.h"
+#include"Source/Math/Transform.h"
 
 #include"Source/3D/VertexData.h"
 #include"Source/3D/Material.h"

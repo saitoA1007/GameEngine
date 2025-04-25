@@ -4,12 +4,6 @@
 
 static const double M_PI = 3.14159265358979323846;
 
-struct Transform {
-	Vector3 scale;
-	Vector3 rotate;
-	Vector3 translate;
-};
-
 // 減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 

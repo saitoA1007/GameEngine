@@ -73,19 +73,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	WorldTransform* worldTransform = new WorldTransform();
+	worldTransform->Initialize(transform);
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	bool isAxisLightOn = false;
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Model* axis = Model::CreateFromOBJ("axis.obj", "Axis/");
-	axis->SetTransformationMatrix(camera.MakeWVPMatrix(worldMatrix));
+	
+	
 
 	// 3Dモデル
 	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{2.0f,0.0f,0.0f} };
+	WorldTransform* worldTransformCube = new WorldTransform();
+	worldTransformCube->Initialize(transformCube);
 	Vector4 colorCube = { 1.0f,1.0f,1.0f,1.0f };
 	bool isCubeLightOn = false;
-	Matrix4x4 worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
 	Model* cube = Model::CreateFromOBJ("cube.obj", "cube/");
-	cube->SetTransformationMatrix(camera.MakeWVPMatrix(worldMatrixCube));
 	
 	// 平行根源
 	DirectionalLight* directionalLight = new DirectionalLight();
@@ -128,7 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 			ImGui::DragFloat3("AxisTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("Axisrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("AxisScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
-			worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+			worldTransform->SetTransform(transform);
 			ImGui::TreePop();
 		}
 		// Cubeの操作
@@ -140,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 			ImGui::DragFloat3("CubeTranslate", &transformCube.translate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("Cuberotate", &transformCube.rotate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("CubeScale", &transformCube.scale.x, 0.01f, -10.0f, 10.0f);
-			worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
+			worldTransformCube->SetTransform(transformCube);
 			ImGui::TreePop();
 		}
 		// 平行根源の操作
@@ -159,6 +161,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		ImGui::End();
 #endif
 
+		// ワールド行列を更新
+		worldTransform->TransformMatrix();
+		worldTransformCube->TransformMatrix();
+
 		//====================================================================
 		// 描画処理
 		//====================================================================
@@ -170,10 +176,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 
 		// Axisモデルを描画
-		axis->Draw(worldMatrix, directionalLight->GetResource(), uvCheckerGH, debugCamera.GetVPMatrix());
+		axis->Draw(*worldTransform, directionalLight->GetResource(), uvCheckerGH, debugCamera.GetVPMatrix());
 
 		// Cubeモデルを描画
-		cube->Draw(worldMatrixCube, directionalLight->GetResource(), cubeGH, debugCamera.GetVPMatrix());
+		cube->Draw(*worldTransformCube, directionalLight->GetResource(), cubeGH, debugCamera.GetVPMatrix());
 
 		// ImGuiの描画処理
 		imGuiManager->Draw();
@@ -184,6 +190,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// 3Dモデルの解放
 	delete axis;
 	delete cube;
+	// ワールド行列データを解放
+	delete worldTransform;
+	delete worldTransformCube;
 
 	// ライトの解放
 	delete directionalLight;
