@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// エンジン部分の初期化処理
 	//============================================================
 
-#pragma region 
+#pragma region
 	// 誰も補足しなかった場合に(Unhandled)、補足する関数を登録
 	SetUnhandledExceptionFilter(ExportDump);
 
@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// ウィンドウの作成
 	std::shared_ptr<WindowsApp> windowsApp = std::make_shared<WindowsApp>();
-	windowsApp->CreateGameWindow(L"CG2", 1280, 720);
+	windowsApp->CreateGameWindow(L"CG2_LE2A_05_サイトウ_アオイ", 1280, 720);
 
 	// リソースチェックのデバック
 	D3DResourceLeakChecker leakCheck;
@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	Sprite::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 
 	// 3dを描画する処理の初期化
-	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
+	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), logManager.get());
 #pragma endregion
 
 	//=================================================================
@@ -141,37 +141,48 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		// デバックカメラの更新処理
 		debugCamera.Update(input.get());
 
+#ifdef _DEBUG
 		// imgui
 		ImGui::Begin("DebugWindow");
-		// モデルの操作
-		ImGui::ColorEdit3("AxisModelColor", &color.x);
-		axis->SetColor(color);
-		ImGui::Checkbox("AxisLight", &isAxisLightOn);
-		axis->SetLightOn(isAxisLightOn);
-		ImGui::DragFloat3("AxisTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("Axisrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("AxisScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
-		worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-		// 光の色を変更
-		ImGui::ColorEdit3("Light_Color", &lightColor.x);
-		directionalLight->SetLightColor(lightColor);
-		// 光の方向を変更
-		ImGui::SliderFloat3("Light_Direction", &lightDir.x, -1.0f, 1.0f);
-		directionalLight->SetLightDir(lightDir);
-		// 光の強度を変更
-		ImGui::SliderFloat("Light_Intensity", &intensity, 0.0f, 10.0f);
-		directionalLight->SetLightIntensity(intensity);
-
-		// モデルの操作
-		ImGui::ColorEdit3("CubeModelColor", &colorCube.x);
-		cube->SetColor(colorCube);
-		ImGui::Checkbox("CubeLight", &isCubeLightOn);
-		cube->SetLightOn(isCubeLightOn);
-		ImGui::DragFloat3("CubeTranslate", &transformCube.translate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("Cuberotate", &transformCube.rotate.x, 0.01f, -10.0f, 10.0f);
-		ImGui::DragFloat3("CubeScale", &transformCube.scale.x, 0.01f, -10.0f, 10.0f);
-		worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
+		// Axisの操作
+		if (ImGui::TreeNode("Axis")) {
+			ImGui::ColorEdit3("AxisModelColor", &color.x);
+			axis->SetColor(color);
+			ImGui::Checkbox("AxisLight", &isAxisLightOn);
+			axis->SetLightOn(isAxisLightOn);
+			ImGui::DragFloat3("AxisTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat3("Axisrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat3("AxisScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);
+			worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+			ImGui::TreePop();
+		}
+		// Cubeの操作
+		if (ImGui::TreeNode("Cube")) {
+			ImGui::ColorEdit3("\nCubeModelColor", &colorCube.x);
+			cube->SetColor(colorCube);
+			ImGui::Checkbox("CubeLight", &isCubeLightOn);
+			cube->SetLightOn(isCubeLightOn);
+			ImGui::DragFloat3("CubeTranslate", &transformCube.translate.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat3("Cuberotate", &transformCube.rotate.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat3("CubeScale", &transformCube.scale.x, 0.01f, -10.0f, 10.0f);
+			worldMatrixCube = MakeAffineMatrix(transformCube.scale, transformCube.rotate, transformCube.translate);
+			ImGui::TreePop();
+		}
+		// 平行根源の操作
+		if (ImGui::TreeNode("Light")) {
+			// 光の色を変更
+			ImGui::ColorEdit3("Light_Color", &lightColor.x);
+			directionalLight->SetLightColor(lightColor);
+			// 光の方向を変更
+			ImGui::SliderFloat3("Light_Direction", &lightDir.x, -1.0f, 1.0f);
+			directionalLight->SetLightDir(lightDir);
+			// 光の強度を変更
+			ImGui::SliderFloat("Light_Intensity", &intensity, 0.0f, 10.0f);
+			directionalLight->SetLightIntensity(intensity);
+			ImGui::TreePop();
+		}
 		ImGui::End();
+#endif
 
 		//====================================================================
 		// 描画処理

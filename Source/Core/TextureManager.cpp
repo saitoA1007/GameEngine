@@ -49,7 +49,7 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 	// テクスチャリソースを作成
 	textures_.at(index_).textureResource = CreateTextureResource(dxCommon_->GetDevice(), *metadata_);
 	if (!textures_.at(index_).textureResource) {
-		logManager_->Log("Failed to create texture resource for: " + fileName);
+		logManager_->Log("Failed to create textureResource for: " + fileName);
 		assert(false);
 	}
 	// テクスチャデータをアップロード

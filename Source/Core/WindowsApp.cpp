@@ -47,16 +47,16 @@ void WindowsApp::CreateGameWindow(const std::wstring& title, int32_t kClientWidt
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 
 	hwnd_ = CreateWindow(
-		wc_.lpszClassName,       // 利用するクラス名
-		title.c_str(),                 // タイトルバーの文字
+		wc_.lpszClassName,      // 利用するクラス名
+		title.c_str(),          // タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,    // よく見るウィンドウスタイル
 		CW_USEDEFAULT,          // 表示X座標(Windowに任せる)
 		CW_USEDEFAULT,          // 表示Y座標(WindowOSに任せる)
-		wrc_.right - wrc_.left,   // ウィンドウ横幅
-		wrc_.bottom - wrc_.top,   // ウィンドウ縦幅
+		wrc_.right - wrc_.left, // ウィンドウ横幅
+		wrc_.bottom - wrc_.top, // ウィンドウ縦幅
 		nullptr,                // 親ウィンドウハンドル
 		nullptr,                // メニューハンドル
-		wc_.hInstance,           // インスタンスハンドル
+		wc_.hInstance,          // インスタンスハンドル
 		nullptr);               // オプション
 
 	// ウィンドウを表示する

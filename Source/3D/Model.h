@@ -7,6 +7,7 @@
 #include"Source/Math/Vector2.h"
 #include"Source/Math/Matrix4x4.h"
 #include"Source/Math/TransformationMatrix.h"
+#include"Source/Common/LogManager.h"
 #include<iostream>
 #include<vector>
 #include <wrl.h>
@@ -39,7 +40,7 @@ public:
 	/// </summary>
 	/// <param name="device"></param>
 	/// <param name="commandList"></param>
-	static void StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList);
+	static void StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, LogManager* logManager);
 
 	/// <summary>
 	/// OBJファイルからメッシュ生成
@@ -53,6 +54,12 @@ public:
 	/// </summary>
 	/// <returns>生成されたモデル</returns>
 	static Model* CreateSphere(uint32_t subdivision);
+
+	/// <summary>
+	/// 三角形の平面を生成
+	/// </summary>
+	/// <returns></returns>
+	//static Model* CreateTrianglePlane();
 
 	// 描画
 	void Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandlesGPU, const Matrix4x4& VPMatrix);
@@ -98,6 +105,9 @@ private:
 	static ID3D12Device* device_;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
+
+	// ログ
+	static LogManager* logManager_;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
