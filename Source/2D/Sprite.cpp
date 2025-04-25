@@ -1,5 +1,6 @@
 #include"Sprite.h"
 #include"Source/Common/CreateBufferResource.h"
+#include"Source/Math/MyMath.h"
 using namespace GameEngine;
 
 ID3D12Device* Sprite::device_ = nullptr;

@@ -107,6 +107,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\3D\DebugCamera.cpp" />
     <ClCompile Include="Source\3D\DirectionalLight.cpp" />
     <ClCompile Include="Source\3D\Model.cpp" />
+    <ClCompile Include="Source\3D\WorldTransform.cpp" />
     <ClCompile Include="Source\Audio\AudioManager.cpp" />
     <ClCompile Include="Source\Common\LogManager.cpp" />
     <ClCompile Include="Source\Core\DirectXCommon.cpp" />
@@ -134,6 +135,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\3D\Material.h" />
     <ClInclude Include="Source\3D\Model.h" />
     <ClInclude Include="Source\3D\VertexData.h" />
+    <ClInclude Include="Source\3D\WorldTransform.h" />
     <ClInclude Include="Source\Audio\AudioManager.h" />
     <ClInclude Include="Source\Common\ConvertString.h" />
     <ClInclude Include="Source\Common\CrashHandle.h" />
@@ -150,6 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Input\InPut.h" />
     <ClInclude Include="Source\Math\Matrix4x4.h" />
     <ClInclude Include="Source\Math\MyMath.h" />
+    <ClInclude Include="Source\Math\Transform.h" />
     <ClInclude Include="Source\Math\TransformationMatrix.h" />
     <ClInclude Include="Source\Math\Vector2.h" />
     <ClInclude Include="Source\Math\Vector3.h" />

@@ -1,4 +1,5 @@
 #include"Camera.h"
+#include"Source/Math/MyMath.h"
 using namespace GameEngine;
 
 void Camera::Initialize(Transform transform, int kClientWidth, int kClientHeight) {

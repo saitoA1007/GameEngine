@@ -97,6 +97,9 @@
     <ClCompile Include="Source\3D\DebugCamera.cpp">
       <Filter>Source\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Source\3D\WorldTransform.cpp">
+      <Filter>Source\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\WindowsApp.h">
@@ -209,6 +212,12 @@
     </ClInclude>
     <ClInclude Include="GameEngine.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\3D\WorldTransform.h">
+      <Filter>Source\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Transform.h">
+      <Filter>Source\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

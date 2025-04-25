@@ -5,6 +5,7 @@
 #include"Source/Core/TextureManager.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Math/MyMath.h"
+#include"WorldTransform.h"
 using namespace GameEngine;
 
 ID3D12Device* Model::device_ = nullptr;
@@ -261,10 +262,10 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 }
 
 // 描画
-void Model::Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
+void Model::Draw(const WorldTransform& worldTrasform, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
 
 	// 変更した内容を適応
-	transformationMatrixData_->WVP = Multiply(worldMatrix, VPMatrix);
+	transformationMatrixData_->WVP = Multiply(worldTrasform.GetWorldMatrix(), VPMatrix);
 
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList_->IASetIndexBuffer(&indexBufferView_);

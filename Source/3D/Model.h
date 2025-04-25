@@ -18,6 +18,7 @@ namespace GameEngine {
 
 	// テクスチャの前方宣言
 	class TextureManager;
+	class WorldTransform;
 
 	class Model {
 	public:
@@ -68,7 +69,7 @@ namespace GameEngine {
 		/// <param name="directionalLightResource">光源</param>
 		/// <param name="textureHandle">テクスチャハンドル</param>
 		/// <param name="VPMatrix"></param>
-		void Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
+		void Draw(const WorldTransform& worldTrasform, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
 
 		/// <summary>
 		/// 3Dモデル移動処理
