@@ -1,5 +1,6 @@
 #include"InPut.h"
 #include<cassert>
+using namespace GameEngine;
 
 void Input::Initialize(HINSTANCE hInstance, HWND hwnd) {
 

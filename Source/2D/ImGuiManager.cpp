@@ -1,4 +1,5 @@
 #include"ImGuiManager.h"
+using namespace GameEngine;
 
 ImGuiManager::ImGuiManager() {}
 ImGuiManager::~ImGuiManager() {}

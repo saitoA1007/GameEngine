@@ -1,4 +1,5 @@
 #include"Camera.h"
+using namespace GameEngine;
 
 void Camera::Initialize(Transform transform, int kClientWidth, int kClientHeight) {
 	// Matrixの初期化
@@ -21,4 +22,8 @@ Matrix4x4 Camera::MakeWVPMatrix(Matrix4x4 worldMatrix) {
 
 Matrix4x4 Camera::GetVPMatrix() {
 	return VPMatrix_;
+}
+
+void  Camera::SetVPMatrix(Matrix4x4 VPMatrix) {
+	this->VPMatrix_ = VPMatrix;
 }

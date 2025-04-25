@@ -9,6 +9,7 @@
 #include"Source/Common/DepthStencilTexture.h"
 
 using namespace Microsoft::WRL;
+using namespace GameEngine;
 
 void DirectXCommon::Initialize(HWND hwnd, uint32_t width, uint32_t height, LogManager* logManager)
 {

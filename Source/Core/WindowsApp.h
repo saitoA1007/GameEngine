@@ -3,63 +3,66 @@
 #include <cstdint>
 #include <string>
 
-class WindowsApp {
-public:
-	WindowsApp() = default;
-	~WindowsApp() = default;
+namespace GameEngine {
 
-	// ウィンドウサイズ
-	static const int32_t kWindowWidth = 1280;
-	static const int32_t kWindowHeight = 720;
+	class WindowsApp {
+	public:
+		WindowsApp() = default;
+		~WindowsApp() = default;
 
-public:
+		// ウィンドウサイズ
+		static const int32_t kWindowWidth = 1280;
+		static const int32_t kWindowHeight = 720;
 
-	/// <summary>
-	/// ウィンドウプロシージャ
-	/// </summary>
-	/// <param name="hwnd">ウィンドウハンドル</param>
-	/// <param name="msg"></param>
-	/// <param name="wparam"></param>
-	/// <param name="lparam"></param>
-	/// <returns></returns>
-	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	public:
 
-	/// <summary>
-	/// ウィンドウの作成
-	/// </summary>
-	/// <param name="title">ウィンドウタイトル</param>
-	/// <param name="kClientWidth">ウィンドウのクライアント領域の横幅</param>
-	/// <param name="kClientHeight">ウィンドウのクライアント領域の縦幅</param>
-	void CreateGameWindow(const std::wstring& title, int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
+		/// <summary>
+		/// ウィンドウプロシージャ
+		/// </summary>
+		/// <param name="hwnd">ウィンドウハンドル</param>
+		/// <param name="msg"></param>
+		/// <param name="wparam"></param>
+		/// <param name="lparam"></param>
+		/// <returns></returns>
+		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	/// <summary>
-	/// メッセージ処理
-	/// </summary>
-	bool ProcessMessage();
+		/// <summary>
+		/// ウィンドウの作成
+		/// </summary>
+		/// <param name="title">ウィンドウタイトル</param>
+		/// <param name="kClientWidth">ウィンドウのクライアント領域の横幅</param>
+		/// <param name="kClientHeight">ウィンドウのクライアント領域の縦幅</param>
+		void CreateGameWindow(const std::wstring& title, int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
 
-	/// <summary>
-	/// ウィンドウの破棄
-	/// </summary>
-	void BreakGameWindow();
+		/// <summary>
+		/// メッセージ処理
+		/// </summary>
+		bool ProcessMessage();
 
-	/// <summary>
-	/// ウィンドウハンドルの取得
-	/// </summary>
-	/// <returns></returns>
-	HWND GetHwnd() const { return hwnd_; }
+		/// <summary>
+		/// ウィンドウの破棄
+		/// </summary>
+		void BreakGameWindow();
 
-	HINSTANCE GetHInstance() const { return wc_.hInstance; }
-private:
-	//WindowsApp() = default;
-	//~WindowsApp() = default;
-	WindowsApp(const WindowsApp&) = delete;
-	WindowsApp& operator=(const WindowsApp&) = delete;
+		/// <summary>
+		/// ウィンドウハンドルの取得
+		/// </summary>
+		/// <returns></returns>
+		HWND GetHwnd() const { return hwnd_; }
 
-	// ウィンドウクラス
-	WNDCLASS wc_{};
-	// ウィンドウハンドル
-	HWND hwnd_ = nullptr;
-	RECT wrc_{};
+		HINSTANCE GetHInstance() const { return wc_.hInstance; }
+	private:
+		//WindowsApp() = default;
+		//~WindowsApp() = default;
+		WindowsApp(const WindowsApp&) = delete;
+		WindowsApp& operator=(const WindowsApp&) = delete;
 
-	MSG msg_{};
-};
+		// ウィンドウクラス
+		WNDCLASS wc_{};
+		// ウィンドウハンドル
+		HWND hwnd_ = nullptr;
+		RECT wrc_{};
+
+		MSG msg_{};
+	};
+}

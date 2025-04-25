@@ -2,6 +2,7 @@
 #include"Source/Common/ConvertString.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Common/DescriptorHandle.h"
+using namespace GameEngine;
 
 void TextureManager::Initialize(DirectXCommon* dxCommon, LogManager* logManager) {
 	dxCommon_ = dxCommon;

@@ -5,6 +5,7 @@
 #include"Source/Core/TextureManager.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Math/MyMath.h"
+using namespace GameEngine;
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;

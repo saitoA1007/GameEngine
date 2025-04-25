@@ -1,32 +1,7 @@
-
+#include"GameEngine.h"
 #include<iostream>
 
-#include"Source/Core/WindowsApp.h"
-#include"Source/Core/DirectXCommon.h"
-#include"Source/Core/GraphicsPipeline.h"
-#include"Source/Core/TextureManager.h"
-
-#include"Source/Common/LogManager.h"
-#include"Source/Common/ResourceLeakChecker.h"
-#include"Source/Common/CrashHandle.h"
-
-#include"Source/3D/Camera.h"
-#include"Source/3D/DebugCamera.h"
-#include"Source/3D/Model.h"
-#include"Source/3D/DirectionalLight.h"
-
-#include"Source/2D/ImGuiManager.h"
-#include"Source/2D/Sprite.h"
-
-#include"Source/Math/TransformationMatrix.h"
-
-#include"Source/Input/InPut.h"
-
-#include"Source/Audio/AudioManager.h"
-
-#pragma comment(lib,"d3d12.lib")
-#pragma comment(lib,"dxgi.lib")
-#pragma comment(lib,"dxguid.lib")
+using namespace GameEngine;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
@@ -94,7 +69,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	camera.Initialize({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-20.0f} }, windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 	// デバックカメラ
 	DebugCamera debugCamera;
-	debugCamera.Initialize(windowsApp->kWindowWidth, windowsApp->kWindowHeight);
+	debugCamera.Initialize({ 0.0f,0.0f,-10.0f }, windowsApp->kWindowWidth, windowsApp->kWindowHeight);
 
 	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };

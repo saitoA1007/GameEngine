@@ -207,6 +207,9 @@
     <ClInclude Include="Source\3D\DebugCamera.h">
       <Filter>Source\3D</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngine.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
