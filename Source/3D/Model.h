@@ -14,6 +14,9 @@
 
 #include"Camera.h"
 
+// テクスチャの前方宣言
+class TextureManager;
+
 class Model {
 public:
 
@@ -26,11 +29,6 @@ public:
 		MaterialData material;
 	};
 
-	enum ModelName {
-		sphere,
-		obj
-	};
-
 public:
 	Model() = default;
 	~Model() = default;
@@ -40,7 +38,7 @@ public:
 	/// </summary>
 	/// <param name="device"></param>
 	/// <param name="commandList"></param>
-	static void StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, LogManager* logManager);
+	static void StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, TextureManager* textureManager, LogManager* logManager);
 
 	/// <summary>
 	/// OBJファイルからメッシュ生成
@@ -59,10 +57,16 @@ public:
 	/// 三角形の平面を生成
 	/// </summary>
 	/// <returns></returns>
-	//static Model* CreateTrianglePlane();
+	static Model* CreateTrianglePlane();
 
-	// 描画
-	void Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandlesGPU, const Matrix4x4& VPMatrix);
+	/// <summary>
+	/// 生成したモデルを描画
+	/// </summary>
+	/// <param name="worldMatrix">ワールド行列</param>
+	/// <param name="directionalLightResource">光源</param>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	/// <param name="VPMatrix"></param>
+	void Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
 
 	/// <summary>
 	/// 3Dモデル移動処理
@@ -109,6 +113,9 @@ private:
 	// ログ
 	static LogManager* logManager_;
 
+	// テクスチャ
+	static TextureManager* textureManager_;
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
@@ -123,7 +130,4 @@ private:
 	TransformationMatrix* transformationMatrixData_ = nullptr;
 	// マテリアルにデータを書き込む
 	Material* materialData_ = nullptr;
-
-	// 生成したモデル名
-	uint32_t modelname_ = 0;
 };

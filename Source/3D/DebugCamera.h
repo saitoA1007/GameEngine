@@ -32,7 +32,4 @@ private:
 
 	// 累積回転行列
 	Matrix4x4 rotateMatrix_;
-
-	Vector3 target = { 0.0f, 0.0f, 0.0f };
-	float distance = 10.0f;
 };

@@ -2,25 +2,25 @@
 #include<fstream>
 #include<sstream>
 #include<cassert>
+#include"Source/Core/TextureManager.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Math/MyMath.h"
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
 LogManager* Model::logManager_ = nullptr;
+TextureManager* Model::textureManager_ = nullptr;
 
-void Model::StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList,LogManager* logManager) {
+void Model::StaticInitialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, TextureManager* textureManager,LogManager* logManager) {
 	device_ = device;
 	commandList_ = commandList;
 	logManager_ = logManager;
+	textureManager_ = textureManager;
 }
 
 Model* Model::CreateSphere(uint32_t subdivision) {
 
 	Model* model = new Model();
-
-	// モデル名を代入
-	model->modelname_ = sphere;
 
 	// 頂点数とインデックス数を計算
 	model->totalVertices_ = (subdivision + 1) * (subdivision + 1);
@@ -127,7 +127,68 @@ Model* Model::CreateSphere(uint32_t subdivision) {
 	return model;
 }
 
+Model* Model::CreateTrianglePlane() {
 
+	Model* model = new Model();
+
+	// 頂点数とインデックス数を計算
+	model->totalVertices_ = 3;
+	model->totalIndices_ = 0;
+
+	// 頂点バッファを作成
+	// vertexResourceを作成
+	model->vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * model->totalVertices_);
+	// リソースの先頭のアドレスから使う
+	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
+	// 使用するリソースのサイズは頂点3つ分のサイズ
+	model->vertexBufferView_.SizeInBytes = sizeof(VertexData) * model->totalVertices_;
+	// 1頂点あたりのサイズ
+	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+	// 頂点データを生成
+	// 頂点リソースにデータを書き込む
+	VertexData* vertexData = nullptr;
+	// 書き込むためのアドレスを取得
+	model->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	// 左下
+	vertexData[0].position = { -0.5f,-0.5f,0.0f,1.0f };
+	vertexData[0].position.w = 1.0f;
+	vertexData[0].texcoord = { 0.0f,1.0f };
+	vertexData[0].normal = { vertexData[0].position.x, vertexData[0].position.y, vertexData[0].position.z };
+	// 上
+	vertexData[1].position = { 0.0f,0.5f,0.0f,1.0f };
+	vertexData[1].position.w = 1.0f;
+	vertexData[1].texcoord = { 0.5f,0.0f };
+	vertexData[1].normal = { vertexData[1].position.x, vertexData[1].position.y, vertexData[1].position.z };
+	// 右下
+	vertexData[2].position = { 0.5f,-0.5f,0.0f,1.0f };
+	vertexData[2].position.w = 1.0f;
+	vertexData[2].texcoord = { 1.0f,1.0f };
+	vertexData[2].normal = { vertexData[2].position.x, vertexData[2].position.y, vertexData[2].position.z };
+
+	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
+	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
+	// 書き込むためのアドレスを取得
+	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
+	// 白色に設定
+	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	// Lightingするのでtureに設定する
+	model->materialData_->enableLighting = false;
+	// UVTransform行列を初期化
+	model->materialData_->uvTransform = MakeIdentity4x4();
+
+	// トランスフォーメーション行列リソースを作成
+	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
+	model->transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
+	// データを書き込む
+	// 書き込むためのアドレスを取得
+	model->transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->transformationMatrixData_));
+	// 単位行列を書き込んでおく
+	model->transformationMatrixData_->WVP = MakeIdentity4x4();
+	model->transformationMatrixData_->World = MakeIdentity4x4();
+
+	return model;
+}
 
 Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& filename) {
 
@@ -143,11 +204,9 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	}
 	ModelData modelData = model->LoadObjeFile("Resources", objFilename, filename);
 
-	// モデル名を代入
-	model->modelname_ = obj;
-
 	// 描画する時に利用する頂点数
-	model->totalIndices_ = UINT(modelData.vertices.size());
+	model->totalVertices_ = UINT(modelData.vertices.size());
+	model->totalIndices_ = 0;
 
 	// 頂点リソースを作る
 	if (logManager_) {
@@ -201,7 +260,7 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 }
 
 // 描画
-void Model::Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandlesGPU, const Matrix4x4& VPMatrix) {
+void Model::Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
 
 	// 変更した内容を適応
 	transformationMatrixData_->WVP = Multiply(worldMatrix, VPMatrix);
@@ -211,12 +270,12 @@ void Model::Draw(const Matrix4x4& worldMatrix, ID3D12Resource* directionalLightR
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootDescriptorTable(2, *textureSrvHandlesGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, textureManager_->GetTextureSrvHandlesGPU(textureHandle));
 	commandList_->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
-	if (modelname_ == sphere) {
+	if (totalIndices_ != 0) {
 		commandList_->DrawIndexedInstanced(totalIndices_, 1, 0, 0, 0);
-	} else if (modelname_ == obj) {
-		commandList_->DrawInstanced(totalIndices_, 1, 0, 0);
+	} else {
+		commandList_->DrawInstanced(totalVertices_, 1, 0, 0);
 	}
 }
 
@@ -254,6 +313,7 @@ Model::ModelData Model::LoadObjeFile(const std::string& directoryPath, const std
 			s >> normal.x >> normal.y >> normal.z;
 			// 法線Xを反転
 			normal.x *= -1.0f;
+			normal.z *= -1.0f;
 			normals.push_back(normal);
 		} else if (identifier == "f") {
 			VertexData triangle[3];
