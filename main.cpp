@@ -40,33 +40,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// ログの初期化
 	LogManager::Create();
-	std::shared_ptr<LogManager> logManager = std::make_shared<LogManager>();
+	std::unique_ptr<LogManager> logManager = std::make_unique<LogManager>();
 
 	// ウィンドウの作成
-	std::shared_ptr<WindowsApp> windowsApp = std::make_shared<WindowsApp>();
+	std::unique_ptr<WindowsApp> windowsApp = std::make_unique<WindowsApp>();
 	windowsApp->CreateGameWindow(L"CG2_LE2A_05_サイトウ_アオイ", 1280, 720);
 
 	// リソースチェックのデバック
 	D3DResourceLeakChecker leakCheck;
 
 	// DirectXCommonの初期化
-	std::shared_ptr<DirectXCommon> dxCommon = std::make_shared<DirectXCommon>();
+	std::unique_ptr<DirectXCommon> dxCommon = std::make_unique<DirectXCommon>();
 	dxCommon->Initialize(windowsApp->GetHwnd(), windowsApp->kWindowWidth, windowsApp->kWindowHeight, logManager.get());
 
 	// PSO設定の初期化
-	std::shared_ptr<GraphicsPipeline> graphicsPipeline = std::make_shared<GraphicsPipeline>();
+	std::unique_ptr<GraphicsPipeline> graphicsPipeline = std::make_unique<GraphicsPipeline>();
 	graphicsPipeline->Initialize(dxCommon->GetDevice(), logManager.get());
 
 	// ImGuiの初期化
-	std::shared_ptr<ImGuiManager> imGuiManager = std::make_shared<ImGuiManager>();
+	std::unique_ptr<ImGuiManager> imGuiManager = std::make_unique<ImGuiManager>();
 	imGuiManager->Initialize(windowsApp.get(), dxCommon.get());
 
 	// 入力処理を初期化
-	std::shared_ptr<Input> input = std::make_shared<Input>();
+	std::unique_ptr<Input> input = std::make_unique<Input>();
 	input->Initialize(hInstance, windowsApp->GetHwnd());
 
 	// 音声の初期化
-	std::shared_ptr<AudioManager> audioManager = std::make_shared<AudioManager>();
+	std::unique_ptr<AudioManager> audioManager = std::make_unique<AudioManager>();
 	audioManager->Initialize();
 
 	// テクスチャの初期化
