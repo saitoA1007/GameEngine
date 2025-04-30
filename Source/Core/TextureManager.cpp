@@ -2,6 +2,8 @@
 #include"Source/Common/ConvertString.h"
 #include"Source/Common/CreateBufferResource.h"
 #include"Source/Common/DescriptorHandle.h"
+#include<format>
+
 using namespace GameEngine;
 
 void TextureManager::Initialize(DirectXCommon* dxCommon, LogManager* logManager) {
@@ -24,9 +26,18 @@ void TextureManager::Finalize() {
 
 uint32_t TextureManager::Load(const std::string& fileName) {
 
+	// テクスチャーの読み込みを開始するログ
+	if (logManager_) {
+		logManager_->Log("Start LoadTexture : " + fileName);
+	}
+
 	// もし同じテクスチャを読み込んだのであれば、すでに格納されている配列番号を返す。
 	for (int i = 0; i < textures_.size(); ++i) {
 		if (textures_.at(i).fileName == fileName) {
+			// 終了したこと、同じテクスチャを読み込んでいることを伝える
+			if (logManager_) {
+				logManager_->Log("End LoadTexture : " + fileName + ". This texture data already loaded");
+			}
 			return i;
 		}
 	}
@@ -35,6 +46,11 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 	if (index_ < kTextureNum_) {
 		index_++;
 	} else {
+		// テクスチャーを読み込む最大数を超えていることを伝えるログ
+		if (logManager_) {
+			logManager_->Log("Too many textures loaded. ");
+			logManager_->Log(std::format("Exceeded texture load limit: {}, now : {}", kTextureNum_, textures_.size()));
+		}
 		return -1;
 	}
 
@@ -72,6 +88,11 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 	logManager_->Log(std::format("CPU Handle: {}, GPU Handle: {}", textures_.at(index_).textureSrvHandleCPU.ptr, textures_.at(index_).textureSrvHandleGPU.ptr));
 	// SRVを作成
 	dxCommon_->GetDevice()->CreateShaderResourceView(textures_.at(index_).textureResource.Get(), &srvDesc_, textures_.at(index_).textureSrvHandleCPU);
+
+	// テクスチャーの読み込みを完了するログ
+	if (logManager_) {
+		logManager_->Log("End LoadTexture : " + fileName + "\n");
+	}
 
 	// 読み込んだ画像が格納されている配列番号を返す
 	return index_;
