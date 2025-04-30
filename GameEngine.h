@@ -13,6 +13,7 @@
 #include"Source/3D/Model.h"
 #include"Source/3D/DirectionalLight.h"
 #include"Source/3D/WorldTransform.h"
+#include"Source/3D/AxisIndicator.h"
 
 #include"Source/2D/ImGuiManager.h"
 #include"Source/2D/Sprite.h"
