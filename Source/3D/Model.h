@@ -69,7 +69,13 @@ namespace GameEngine {
 		/// <param name="directionalLightResource">光源</param>
 		/// <param name="textureHandle">テクスチャハンドル</param>
 		/// <param name="VPMatrix"></param>
-		void Draw(const WorldTransform& worldTrasform, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
+		void Draw(const WorldTransform& worldTrasform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
+
+		/// <summary>
+		/// モデルに光源を適応させる
+		/// </summary>
+		/// <param name="directionalLightResource"></param>
+		void DrawLight(ID3D12Resource* directionalLightResource);
 
 		/// <summary>
 		/// 3Dモデル移動処理
@@ -102,6 +108,14 @@ namespace GameEngine {
 
 		// mtlファイルを読み込み
 		MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+		// OBJファイルの面の成分を作成
+		VertexData ParseVertex(
+			const std::string& vertexDefinition,
+			const std::vector<Vector4>& positions,
+			const std::vector<Vector2>& texcoords,
+			const std::vector<Vector3>& normals
+		);
 
 	private:
 		//Model() = default;

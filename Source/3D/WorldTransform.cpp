@@ -8,7 +8,7 @@ void WorldTransform::Initialize(const Transform& transform) {
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 }
 
-void WorldTransform::TransformMatrix() {
-
+void WorldTransform::UpdateTransformMatrix() {
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 }
+

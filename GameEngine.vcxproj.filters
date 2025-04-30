@@ -100,6 +100,9 @@
     <ClCompile Include="Source\3D\WorldTransform.cpp">
       <Filter>Source\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Source\3D\AxisIndicator.cpp">
+      <Filter>Source\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\WindowsApp.h">
@@ -218,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="Source\Math\Transform.h">
       <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\3D\AxisIndicator.h">
+      <Filter>Source\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

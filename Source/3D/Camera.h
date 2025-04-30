@@ -14,19 +14,34 @@ namespace GameEngine {
 		void Initialize(Transform transform, int kClientWidth, int kClientHeight);
 
 		/// <summary>
+		/// カメラの更新処理
+		/// </summary>
+		void Update();
+
+		/// <summary>
 		/// カメラの位置を変更
 		/// </summary>
 		/// <param name="transform"></param>
 		void SetCameraPosition(Transform transform);
 
+	public:
+
+		/// <summary>
+		/// モデルをカメラ座標に変換する処理
+		/// </summary>
+		/// <param name="worldMatrix"></param>
+		/// <returns></returns>
 		Matrix4x4 MakeWVPMatrix(Matrix4x4 worldMatrix);
 
 		Matrix4x4 GetViewMatrix() { return viewMatrix_; }
+		void SetViewMatrix(const Matrix4x4& viewMatrix);
+
 		Matrix4x4 GetProjectionMatrix() { return projectionMatrix_; }
+		void SetProjectionMatrix(float fovY, int kClientWidth, int kClientHeight, float near, float far);
 
 		Matrix4x4 GetVPMatrix();
-
 		void SetVPMatrix(Matrix4x4 VPMatrix);
+		
 	private:
 
 		Matrix4x4 cameraMatrix_;

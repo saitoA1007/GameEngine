@@ -18,13 +18,16 @@ namespace GameEngine {
 		/// <summary>
 		/// SRTを適応
 		/// </summary>
-		void TransformMatrix();
+		void UpdateTransformMatrix();
+
+	public:
 
 		void SetScale(const Vector3& scale) { transform_.rotate = scale; }
 		void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
 		void SetTranslate(const Vector3& translate) { transform_.rotate = translate; }
 
 		void SetTransform(const Transform transform) { transform_ = transform; }
+		void SetWorldMatrix(const Matrix4x4 worldMatrix) { this->worldMatrix_ = worldMatrix; }
 
 		Matrix4x4 GetWorldMatrix() const { return worldMatrix_; }
 

@@ -103,6 +103,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\2D\ImGuiManager.cpp" />
     <ClCompile Include="Source\2D\Sprite.cpp" />
+    <ClCompile Include="Source\3D\AxisIndicator.cpp" />
     <ClCompile Include="Source\3D\Camera.cpp" />
     <ClCompile Include="Source\3D\DebugCamera.cpp" />
     <ClCompile Include="Source\3D\DirectionalLight.cpp" />
@@ -129,6 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Source\2D\ImGuiManager.h" />
     <ClInclude Include="Source\2D\Sprite.h" />
+    <ClInclude Include="Source\3D\AxisIndicator.h" />
     <ClInclude Include="Source\3D\Camera.h" />
     <ClInclude Include="Source\3D\DebugCamera.h" />
     <ClInclude Include="Source\3D\DirectionalLight.h" />

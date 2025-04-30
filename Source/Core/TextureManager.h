@@ -14,9 +14,6 @@ namespace GameEngine {
 
 	class TextureManager {
 	public:
-		TextureManager() = default;
-		~TextureManager() = default;
-
 		// テクスチャ
 		struct Texture {
 			// テクスチャリソース
@@ -30,6 +27,10 @@ namespace GameEngine {
 			// 名前
 			std::string fileName;
 		};
+
+	public:
+		TextureManager() = default;
+		~TextureManager() = default;
 
 		/// <summary>
 		/// 初期化

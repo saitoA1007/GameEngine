@@ -10,32 +10,41 @@ namespace GameEngine {
 
 	class ImGuiManager {
 	public:
+		ImGuiManager() = default;
+		~ImGuiManager() = default;
 
-		ImGuiManager();
-		~ImGuiManager();
-
+		/// <summary>
+		/// 初期処理
+		/// </summary>
+		/// <param name="windowsApp"></param>
+		/// <param name="dxCommon"></param>
 		void Initialize(WindowsApp* windowsApp, DirectXCommon* dxCommon);
 
+		/// <summary>
+		/// 更新前処理
+		/// </summary>
 		void BeginFrame();
 
+		/// <summary>
+		/// 更新後処理
+		/// </summary>
 		void EndFrame();
 
+		/// <summary>
+		/// 描画処理
+		/// </summary>
 		void Draw();
 
+		/// <summary>
+		/// 終了処理
+		/// </summary>
 		void Finalize();
 
 	private:
-		//ImGuiManager() = default;
-		//~ImGuiManager() = default;
 		ImGuiManager(const ImGuiManager&) = delete;
 		const ImGuiManager& operator=(const ImGuiManager&) = delete;
 
 		WindowsApp* windowsApp_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
-
-		// ビューポート
-		D3D12_VIEWPORT viewport_{};
-		// シザー矩形
-		D3D12_RECT scissorRect_{};
 	};
 }

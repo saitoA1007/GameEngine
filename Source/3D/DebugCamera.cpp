@@ -50,15 +50,14 @@ void DebugCamera::Update(Input* input) {
 
 		const float speed = 0.05f;
 
-		// 回転（Yaw）でXZ成分だけ回す
-		float yaw = rotate_.y;
-		float rotatedX = move.x * cosf(yaw) - move.z * sinf(yaw);
-		float rotatedZ = move.x * sinf(yaw) + move.z * cosf(yaw);
+		// x,zだけ回す
+		float rotatedX = move.x * cosf(rotate_.y) - move.z * sinf(rotate_.y);
+		float rotatedZ = move.x * sinf(rotate_.y) + move.z * cosf(rotate_.y);
 
 		// 移動
 		translate_.x += rotatedX * speed;
 		translate_.y += move.y * speed; // Yはそのまま
-		translate_.z += rotatedZ * (speed + 0.05f);
+		translate_.z += rotatedZ * (speed + 0.1f);
 	}
 
 	// ワールド行列
@@ -66,9 +65,12 @@ void DebugCamera::Update(Input* input) {
 
 	// カメラの変更した内容を適用する処理
 	viewMatrix_ = InverseMatrix(worldMatrix);
-	//projectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
 }
 
 Matrix4x4 DebugCamera::GetVPMatrix() {
 	return Multiply(viewMatrix_, projectionMatrix_);
+}
+
+Matrix4x4 DebugCamera::GetRotateMatrix() {
+	return rotateMatrix_;
 }
