@@ -16,6 +16,11 @@ void DirectXCommon::Initialize(HWND hwnd, uint32_t width, uint32_t height, LogMa
     // ログを所得
     logManager_ = logManager;
 
+    // 初期化を開始するログ
+    if (logManager_) {
+        logManager_->Log("DirectXCommon Class start Initialize\n");
+    }
+
     // デバイスとコマンドオブジェクトの生成
     CreateDevice();
 #ifdef _DEBUG
@@ -43,6 +48,11 @@ void DirectXCommon::Initialize(HWND hwnd, uint32_t width, uint32_t height, LogMa
     scissorRect_.right = static_cast<int>(width);
     scissorRect_.top = 0;
     scissorRect_.bottom = static_cast<int>(height);
+
+    // 初期化を終了するログ
+    if (logManager_) {
+        logManager_->Log("DirectXCommon Class end Initialize\n");
+    }
 }
 
 void DirectXCommon::PreDraw(ID3D12RootSignature* rootSignature, ID3D12PipelineState* graphicsPipelineState)
@@ -121,6 +131,10 @@ void DirectXCommon::PostDraw()
 
 void DirectXCommon::CreateDevice()
 {
+    // DirectXのデバイスを作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("Start　Create Device\n");
+    }
 #ifdef _DEBUG
     ComPtr<ID3D12Debug1> debugController;
     if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
@@ -198,6 +212,10 @@ void DirectXCommon::CreateCommandObjects()
 
 void DirectXCommon::CreateSwapChain(HWND hwnd, uint32_t width, uint32_t height)
 {
+    // スワップチェーンを作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("Start　Create SwapChain\n");
+    }
     // スワップチェーンを生成する
     swapChainDesc.Width = width;                       // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
     swapChainDesc.Height = height;                     // 画面の高さ。ウィンドウのクライアント領域同じものにしておく
@@ -216,10 +234,20 @@ void DirectXCommon::CreateSwapChain(HWND hwnd, uint32_t width, uint32_t height)
     assert(SUCCEEDED(hr));
     hr = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1]));
     assert(SUCCEEDED(hr));
+
+    // スワップチェーンを作成を完了するログ
+    if (logManager_) {
+        logManager_->Log("End　Create SwapChain\n");
+    }
 }
 
 void DirectXCommon::CreateRenderTargetViews()
 {
+    // ターゲットビューの作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("Start　Create TargetView\n");
+    }
+
     // RTVの設定
     rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
@@ -244,10 +272,20 @@ void DirectXCommon::CreateRenderTargetViews()
     rtvHandles_[1] = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV_, 1);
     // 2つ目を作る
     device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc, rtvHandles_[1]);
+
+    // ターゲットビューの作成を完了するログ
+    if (logManager_) {
+        logManager_->Log("End　Create TargetView\n");
+    }
 }
 
 void DirectXCommon::CreateDepthStencilView(uint32_t width, uint32_t height)
 {
+    // ステンシル情報の作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("Start　Create DepthStencilView\n");
+    }
+
     // DepthStencilTextureをウィンドウのサイズで作成
     depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), width, height);
 
@@ -258,10 +296,20 @@ void DirectXCommon::CreateDepthStencilView(uint32_t width, uint32_t height)
 
     // DSVHeapの先頭にDSVを作る
     device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+
+    // ステンシル情報の作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("End　Create DepthStencilView\n");
+    }
 }
 
 void DirectXCommon::CreateFence()
 {
+    // フェンスの作成を開始するログ
+    if (logManager_) {
+        logManager_->Log("Start　Create Fence\n");
+    }
+
     // 初期値0でFenceを作る
     HRESULT hr = device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
     assert(SUCCEEDED(hr));
@@ -269,6 +317,11 @@ void DirectXCommon::CreateFence()
     // FenceのSignalを待つためのイベントを作成する
     fenceEvent_ = CreateEvent(NULL, FALSE, FALSE, NULL);
     assert(fenceEvent_ != nullptr);
+
+    // フェンスの作成を完了するログ
+    if (logManager_) {
+        logManager_->Log("End　Create Fence\n");
+    }
 }
 
 void DirectXCommon::WaitForGPU()

@@ -9,6 +9,11 @@ void GraphicsPipeline::Initialize(ID3D12Device* device, LogManager* logManager) 
 	// ログを取得
 	logManager_ = logManager;
 
+	// 初期化を開始するログ
+	if (logManager_) {
+		logManager_->Log("GraphicsPipeline Class start Initialize\n");
+	}
+
 	// dxcCompilerを初期化
 	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
 	assert(SUCCEEDED(hr));
@@ -149,6 +154,11 @@ void GraphicsPipeline::Initialize(ID3D12Device* device, LogManager* logManager) 
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
+
+	// 初期化を終了するログ
+	if (logManager_) {
+		logManager_->Log("GraphicsPipeline Class End Initialize\n");
+	}
 }
 
 Microsoft::WRL::ComPtr<IDxcBlob> GraphicsPipeline::CompileShader(
