@@ -1,8 +1,6 @@
 #include"GameEngine.h"
 #include<iostream>
 
-#include"Source/3D/AxisIndicator.h"
-
 using namespace GameEngine;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
