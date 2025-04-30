@@ -1,27 +1,10 @@
 #include"ImGuiManager.h"
 using namespace GameEngine;
 
-ImGuiManager::ImGuiManager() {}
-ImGuiManager::~ImGuiManager() {}
-
 void ImGuiManager::Initialize(WindowsApp* windowsApp, DirectXCommon* dxCommon) {
 
 	windowsApp_ = windowsApp;
 	dxCommon_ = dxCommon;
-
-	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport_.Width = windowsApp_->kWindowWidth;
-	viewport_.Height = windowsApp_->kWindowHeight;
-	viewport_.TopLeftX = 0;
-	viewport_.TopLeftY = 0;
-	viewport_.MinDepth = 0.0f;
-	viewport_.MaxDepth = 1.0f;
-	
-	// 基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect_.left = 0;
-	scissorRect_.right = windowsApp_->kWindowWidth;
-	scissorRect_.top = 0;
-	scissorRect_.bottom = windowsApp_->kWindowHeight;
 
 	// ImGuiの初期化。
 	IMGUI_CHECKVERSION();
@@ -49,8 +32,6 @@ void ImGuiManager::EndFrame() {
 	// Imguiの描画用のDescriptorHeapの設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { dxCommon_->GetSRVHeap() };
 	dxCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
-	dxCommon_->GetCommandList()->RSSetViewports(1, &viewport_); // Viewportを設定
-	dxCommon_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);      // Scirssorを設定
 }
 
 void ImGuiManager::Draw() {

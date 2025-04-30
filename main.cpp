@@ -1,6 +1,8 @@
 #include"GameEngine.h"
 #include<iostream>
 
+#include"Source/3D/AxisIndicator.h"
+
 using namespace GameEngine;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
@@ -61,8 +63,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 画像をロード
 	uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
-	uint32_t monsterBallGH = textureManager->Load("Resources/monsterBall.png");
 	uint32_t cubeGH = textureManager->Load("Resources/cube/cube.jpg");
+	uint32_t axisGH = textureManager->Load("Resources/axis/axis.jpg");
+
+	// 軸方向表示
+	std::unique_ptr<AxisIndicator> axisIndicator = std::make_unique<AxisIndicator>();
+	axisIndicator->Initialize("axis.obj", dxCommon->GetCommandList());
 
 	// カメラ
 	Camera camera;
@@ -77,12 +83,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	worldTransform->Initialize(transform);
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	bool isAxisLightOn = false;
-	Model* axis = Model::CreateFromOBJ("axis.obj", "Axis/");
-	
-	
+	Model* axis = Model::CreateFromOBJ("axis.obj", "axis/");
 
 	// 3Dモデル
-	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{2.0f,0.0f,0.0f} };
+	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
 	WorldTransform* worldTransformCube = new WorldTransform();
 	worldTransformCube->Initialize(transformCube);
 	Vector4 colorCube = { 1.0f,1.0f,1.0f,1.0f };
@@ -162,8 +166,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 #endif
 
 		// ワールド行列を更新
-		worldTransform->TransformMatrix();
-		worldTransformCube->TransformMatrix();
+		worldTransform->UpdateTransformMatrix();
+		worldTransformCube->UpdateTransformMatrix();
+
+		// 軸を回転させる処理
+		axisIndicator->Update(debugCamera.GetRotateMatrix());
 
 		//====================================================================
 		// 描画処理
@@ -176,10 +183,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 
 		// Axisモデルを描画
-		axis->Draw(*worldTransform, directionalLight->GetResource(), uvCheckerGH, debugCamera.GetVPMatrix());
+		axis->DrawLight(directionalLight->GetResource());
+		axis->Draw(*worldTransform, axisGH, debugCamera.GetVPMatrix());
 
 		// Cubeモデルを描画
-		cube->Draw(*worldTransformCube, directionalLight->GetResource(), cubeGH, debugCamera.GetVPMatrix());
+		//cube->DrawLight(directionalLight->GetResource());
+		//cube->Draw(*worldTransformCube,cubeGH, debugCamera.GetVPMatrix());
+
+		// 軸を描画
+		axisIndicator->Draw(axisGH);
 
 		// ImGuiの描画処理
 		imGuiManager->Draw();

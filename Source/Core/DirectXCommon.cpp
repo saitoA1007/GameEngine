@@ -29,6 +29,20 @@ void DirectXCommon::Initialize(HWND hwnd, uint32_t width, uint32_t height, LogMa
     CreateDepthStencilView(width, height);
     // フェンスの生成
     CreateFence();
+
+    // クライアント領域のサイズと一緒にして画面全体に表示
+    viewport_.Width = static_cast<float>(width);
+    viewport_.Height = static_cast<float>(height);
+    viewport_.TopLeftX = 0;
+    viewport_.TopLeftY = 0;
+    viewport_.MinDepth = 0.0f;
+    viewport_.MaxDepth = 1.0f;
+
+    // 基本的にビューポートと同じ矩形が構成されるようにする
+    scissorRect_.left = 0;
+    scissorRect_.right = static_cast<int>(width);
+    scissorRect_.top = 0;
+    scissorRect_.bottom = static_cast<int>(height);
 }
 
 void DirectXCommon::PreDraw(ID3D12RootSignature* rootSignature, ID3D12PipelineState* graphicsPipelineState)
@@ -60,9 +74,12 @@ void DirectXCommon::PreDraw(ID3D12RootSignature* rootSignature, ID3D12PipelineSt
     // 指定した深度で画面全体をクリアする
     commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
+    
+    commandList_->RSSetViewports(1, &viewport_); // Viewportを設定
+    commandList_->RSSetScissorRects(1, &scissorRect_); // Scirssorを設定
     //// RootSignatureを設定。PSOに設定しているけど別途設定が必要
     commandList_->SetGraphicsRootSignature(rootSignature);
-    commandList_->SetPipelineState(graphicsPipelineState); // PSoを設定
+    commandList_->SetPipelineState(graphicsPipelineState); // PSOを設定   
 }
 
 void DirectXCommon::PostDraw()

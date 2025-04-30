@@ -18,7 +18,11 @@ namespace GameEngine {
 		/// </summary>
 		void Update(Input* input);
 
+	public:
+
 		Matrix4x4 GetVPMatrix();
+
+		Matrix4x4 GetRotateMatrix();
 
 	private:
 		// 拡縮

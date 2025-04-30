@@ -262,7 +262,7 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 }
 
 // 描画
-void Model::Draw(const WorldTransform& worldTrasform, ID3D12Resource* directionalLightResource, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
+void Model::Draw(const WorldTransform& worldTrasform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
 
 	// 変更した内容を適応
 	transformationMatrixData_->WVP = Multiply(worldTrasform.GetWorldMatrix(), VPMatrix);
@@ -273,12 +273,15 @@ void Model::Draw(const WorldTransform& worldTrasform, ID3D12Resource* directiona
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootDescriptorTable(2, textureManager_->GetTextureSrvHandlesGPU(textureHandle));
-	commandList_->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	if (totalIndices_ != 0) {
 		commandList_->DrawIndexedInstanced(totalIndices_, 1, 0, 0, 0);
 	} else {
 		commandList_->DrawInstanced(totalVertices_, 1, 0, 0);
 	}
+}
+
+void Model::DrawLight(ID3D12Resource* directionalLightResource) {
+	commandList_->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 }
 
 Model::ModelData Model::LoadObjeFile(const std::string& directoryPath, const std::string& objFilename, const std::string& filename) {
@@ -315,32 +318,30 @@ Model::ModelData Model::LoadObjeFile(const std::string& directoryPath, const std
 			s >> normal.x >> normal.y >> normal.z;
 			// 法線Xを反転
 			normal.x *= -1.0f;
-			normal.z *= -1.0f;
 			normals.push_back(normal);
 		} else if (identifier == "f") {
+
 			VertexData triangle[3];
-			// 面は三角形限定。その他は未対応
-			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-				std::string vertexDefinition;
-				s >> vertexDefinition;
-				// 頂点の要素へIndexは(位置/UV/法線)で格納されているので、分解してIndexを取得する
-				std::istringstream v(vertexDefinition);
-				uint32_t elementIndices[3];
-				for (int32_t element = 0; element < 3; ++element) {
-					std::string index;
-					std::getline(v, index, '/');
-					elementIndices[element] = std::stoi(index);
-				}
-				// 要素へのIndexから、実際の要素の値を取得して、頂点を構築する
-				Vector4 position = positions[elementIndices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndices[1] - 1];
-				Vector3 normal = normals[elementIndices[2] - 1];
-				triangle[faceVertex] = { position,texcoord,normal };
+
+			std::vector<std::string> vertexDefinitions;
+			std::string vertexDef;
+			while (s >> vertexDef) {
+				vertexDefinitions.push_back(vertexDef);
 			}
-			// 頂点を逆順で登録
-			modelData.vertices.push_back(triangle[2]);
-			modelData.vertices.push_back(triangle[1]);
-			modelData.vertices.push_back(triangle[0]);
+
+			// 各面に対応
+			if (vertexDefinitions.size() >= 3) {
+				for (uint32_t i = 1; i < vertexDefinitions.size() - 1; ++i) {
+					triangle[0] = ParseVertex(vertexDefinitions[0], positions, texcoords, normals);
+					triangle[1] = ParseVertex(vertexDefinitions[i], positions, texcoords, normals);
+					triangle[2] = ParseVertex(vertexDefinitions[i + 1], positions, texcoords, normals);
+
+					// 頂点を逆順で登録
+					modelData.vertices.push_back(triangle[2]);
+					modelData.vertices.push_back(triangle[1]);
+					modelData.vertices.push_back(triangle[0]);
+				}	
+			}
 		} else if (identifier == "mtllib") {
 			// materialTemplateLibraryファイルの名前を取得する
 			std::string materialFilename;
@@ -373,6 +374,34 @@ Model::MaterialData Model::LoadMaterialTemplateFile(const std::string& directory
 		}
 	}
 	return materialData;
+}
+
+VertexData Model::ParseVertex(
+	const std::string& vertexDefinition,
+	const std::vector<Vector4>& positions,
+	const std::vector<Vector2>& texcoords,
+	const std::vector<Vector3>& normals
+) {
+	std::istringstream v(vertexDefinition);
+	std::string indexStr;
+	uint32_t indices[3] = { 0 };
+
+	for (int i = 0; i < 3; ++i) {
+
+		if (!std::getline(v, indexStr, '/')) {
+			break;
+		}
+
+		if (!indexStr.empty()) {
+			indices[i] = std::stoi(indexStr);
+		}
+	}
+
+	Vector4 position = positions[indices[0] - 1];
+	Vector2 texcoord = texcoords[indices[1] - 1];
+	Vector3 normal = normals[indices[2] - 1];
+
+	return { position, texcoord, normal };
 }
 
 void Model::SetTransformationMatrix(const Matrix4x4& worldMatrix) {

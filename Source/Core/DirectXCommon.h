@@ -94,6 +94,11 @@ namespace GameEngine {
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
         D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 
+        // ビューポート
+        D3D12_VIEWPORT viewport_{};
+        // シザー矩形
+        D3D12_RECT scissorRect_{};
+
         // ログ
         LogManager* logManager_;
     };
