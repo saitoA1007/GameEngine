@@ -51,7 +51,8 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 			logManager_->Log("Too many textures loaded. ");
 			logManager_->Log(std::format("Exceeded texture load limit: {}, now : {}", kTextureNum_, textures_.size()));
 		}
-		return -1;
+		// 即座に終了
+		std::abort();
 	}
 
 	textures_.at(index_).fileName = fileName;

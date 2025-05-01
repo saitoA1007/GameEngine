@@ -11,10 +11,16 @@ namespace GameEngine {
 		AxisIndicator() = default;
 		~AxisIndicator() = default;
 
-		/// /// <summary>
+		/// <summary>
+		/// 静的初期化
+		/// </summary>
+		/// <param name="commandList"></param>
+		static void StaticInitialize(ID3D12GraphicsCommandList* commandList);
+
+		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(const std::string& modelName, ID3D12GraphicsCommandList* commandList);
+		void Initialize(const std::string& modelName);
 
 		/// <summary>
 		/// 更新
@@ -30,6 +36,9 @@ namespace GameEngine {
 		AxisIndicator(const AxisIndicator&) = delete;
 		AxisIndicator& operator=(const AxisIndicator&) = delete;
 
+		// コマンドリスト
+		static ID3D12GraphicsCommandList* commandList_;
+
 		// モデル
 		std::unique_ptr<Model> model_;
 		// カメラ
@@ -43,7 +52,5 @@ namespace GameEngine {
 		D3D12_VIEWPORT viewport_{};
 		// シザー矩形
 		D3D12_RECT scissorRect_{};
-
-		ID3D12GraphicsCommandList* commandList_;
 	};
 }

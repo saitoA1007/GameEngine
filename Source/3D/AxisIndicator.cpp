@@ -2,7 +2,14 @@
 #include"Source/Math/MyMath.h"
 using namespace GameEngine;
 
-void AxisIndicator::Initialize(const std::string& modelName, ID3D12GraphicsCommandList* commandList) {
+ID3D12GraphicsCommandList* AxisIndicator::commandList_ = nullptr;
+
+void AxisIndicator::StaticInitialize(ID3D12GraphicsCommandList* commandList) {
+
+	commandList_ = commandList;
+}
+
+void AxisIndicator::Initialize(const std::string& modelName) {
 	model_ = std::unique_ptr<Model>(Model::CreateFromOBJ(modelName, "axis/"));
 
 	transform_.scale = { 1.0f,1.0f,1.0f };
@@ -26,8 +33,6 @@ void AxisIndicator::Initialize(const std::string& modelName, ID3D12GraphicsComma
 	scissorRect_.right = static_cast<int>(1280.0f + 160.0f);
 	scissorRect_.top = 0;
 	scissorRect_.bottom = static_cast<int>(90);
-
-	commandList_ = commandList;
 }
 
 void AxisIndicator::Update(const Matrix4x4& rotate) {
