@@ -53,6 +53,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 3dを描画する処理の初期化
 	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), textureManager.get(), logManager.get());
+
+	// 軸方向表示の初期化
+	AxisIndicator::StaticInitialize(dxCommon->GetCommandList());
 #pragma endregion
 
 	//=================================================================
@@ -60,13 +63,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	//=================================================================
 
 	// 画像をロード
-	uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
-	uint32_t cubeGH = textureManager->Load("Resources/cube/cube.jpg");
+	//uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
+	//uint32_t cubeGH = textureManager->Load("Resources/cube/cube.jpg");
 	uint32_t axisGH = textureManager->Load("Resources/axis/axis.jpg");
 
 	// 軸方向表示
 	std::unique_ptr<AxisIndicator> axisIndicator = std::make_unique<AxisIndicator>();
-	axisIndicator->Initialize("axis.obj", dxCommon->GetCommandList());
+	axisIndicator->Initialize("axis.obj");
 
 	// カメラ
 	Camera camera;
