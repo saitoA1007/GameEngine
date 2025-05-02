@@ -9,13 +9,13 @@ void AxisIndicator::StaticInitialize(ID3D12GraphicsCommandList* commandList) {
 	commandList_ = commandList;
 }
 
-void AxisIndicator::Initialize(const std::string& modelName) {
-	model_ = std::unique_ptr<Model>(Model::CreateFromOBJ(modelName, "axis/"));
+void AxisIndicator::Initialize(const std::string& modelName, ID3D12Device* device) {
+	model_ = std::unique_ptr<Model>(Model::CreateFromOBJ(modelName, "axis"));
 
 	transform_.scale = { 1.0f,1.0f,1.0f };
 	transform_.rotate = { 0.0f,0.0f,0.0f };
 	transform_.translate = { 0.0f,0.0f,0.0f };
-	worldTransform_.Initialize(transform_);
+	worldTransform_.Initialize(transform_, device);
 
 	camera_.Initialize({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} }, 160, 90);
 	camera_.SetProjectionMatrix(0.45f, 160, 90, 0.1f, 20.0f);

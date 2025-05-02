@@ -11,6 +11,9 @@ namespace GameEngine {
 		/// <summary>
 		/// 初期化
 		/// </summary>
+		/// <param name="transform">Scale,Rotate,Translate : 各型Vector3</param>
+		/// <param name="kClientWidth">画面横幅</param>
+		/// <param name="kClientHeight">画面縦幅</param>
 		void Initialize(Transform transform, int kClientWidth, int kClientHeight);
 
 		/// <summary>
