@@ -11,6 +11,9 @@ namespace GameEngine {
 		/// <summary>
 		/// 初期化
 		/// </summary>
+		/// <param name="translate">カメラ座標</param>
+		/// <param name="width">画面横幅</param>
+		/// <param name="height">画面縦幅</param>
 		void Initialize(const Vector3& translate, int width, int height);
 
 		/// <summary>

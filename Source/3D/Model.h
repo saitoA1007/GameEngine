@@ -46,8 +46,9 @@ namespace GameEngine {
 		/// <summary>
 		/// OBJファイルからメッシュ生成
 		/// </summary>
-		/// <param name="modelname">モデル名</param>
-		/// <returns>生成されたモデル</returns>
+		/// <param name="objFilename">.objファイル名</param>
+		/// <param name="filename">格納ファイル名</param>
+		/// <returns></returns>
 		static Model* CreateFromOBJ(const std::string& objFilename, const std::string& filename);
 
 		/// <summary>
@@ -69,19 +70,13 @@ namespace GameEngine {
 		/// <param name="directionalLightResource">光源</param>
 		/// <param name="textureHandle">テクスチャハンドル</param>
 		/// <param name="VPMatrix"></param>
-		void Draw(const WorldTransform& worldTrasform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
+		void Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
 
 		/// <summary>
 		/// モデルに光源を適応させる
 		/// </summary>
 		/// <param name="directionalLightResource"></param>
 		void DrawLight(ID3D12Resource* directionalLightResource);
-
-		/// <summary>
-		/// 3Dモデル移動処理
-		/// </summary>
-		/// <param name="worldMatrix"></param>
-		void SetTransformationMatrix(const Matrix4x4& worldMatrix);
 
 		/// <summary>
 		/// 3Dモデルの色を変更
@@ -136,7 +131,6 @@ namespace GameEngine {
 		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 		Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-		Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_;
 
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
@@ -144,7 +138,6 @@ namespace GameEngine {
 		uint32_t totalVertices_ = 0;
 		uint32_t totalIndices_ = 0;
 
-		TransformationMatrix* transformationMatrixData_ = nullptr;
 		// マテリアルにデータを書き込む
 		Material* materialData_ = nullptr;
 	};

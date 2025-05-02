@@ -69,7 +69,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 軸方向表示
 	std::unique_ptr<AxisIndicator> axisIndicator = std::make_unique<AxisIndicator>();
-	axisIndicator->Initialize("axis.obj");
+	axisIndicator->Initialize("axis.obj", dxCommon->GetDevice());
 
 	// カメラ
 	Camera camera;
@@ -81,18 +81,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	WorldTransform* worldTransform = new WorldTransform();
-	worldTransform->Initialize(transform);
+	worldTransform->Initialize(transform,dxCommon->GetDevice());
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	bool isAxisLightOn = false;
-	Model* axis = Model::CreateFromOBJ("axis.obj", "axis/");
+	Model* axis = Model::CreateFromOBJ("axis.obj", "axis");
 
 	// 3Dモデル
 	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
 	WorldTransform* worldTransformCube = new WorldTransform();
-	worldTransformCube->Initialize(transformCube);
+	worldTransformCube->Initialize(transformCube,dxCommon->GetDevice());
 	Vector4 colorCube = { 1.0f,1.0f,1.0f,1.0f };
 	bool isCubeLightOn = false;
-	Model* cube = Model::CreateFromOBJ("cube.obj", "cube/");
+	Model* cube = Model::CreateFromOBJ("cube.obj", "cube");
 	
 	// 平行根源
 	DirectionalLight* directionalLight = new DirectionalLight();

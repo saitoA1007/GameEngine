@@ -116,16 +116,6 @@ Model* Model::CreateSphere(uint32_t subdivision) {
 	// UVTransform行列を初期化
 	model->materialData_->uvTransform = MakeIdentity4x4();
 
-	// トランスフォーメーション行列リソースを作成
-	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
-	model->transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
-	// データを書き込む
-	// 書き込むためのアドレスを取得
-	model->transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->transformationMatrixData_));
-	// 単位行列を書き込んでおく
-	model->transformationMatrixData_->WVP = MakeIdentity4x4();
-	model->transformationMatrixData_->World = MakeIdentity4x4();
-
 	return model;
 }
 
@@ -179,16 +169,6 @@ Model* Model::CreateTrianglePlane() {
 	// UVTransform行列を初期化
 	model->materialData_->uvTransform = MakeIdentity4x4();
 
-	// トランスフォーメーション行列リソースを作成
-	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
-	model->transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
-	// データを書き込む
-	// 書き込むためのアドレスを取得
-	model->transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->transformationMatrixData_));
-	// 単位行列を書き込んでおく
-	model->transformationMatrixData_->WVP = MakeIdentity4x4();
-	model->transformationMatrixData_->World = MakeIdentity4x4();
-
 	return model;
 }
 
@@ -240,19 +220,6 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	// UVTransform行列を初期化
 	model->materialData_->uvTransform = MakeIdentity4x4();
 
-	// トランスフォーメーション行列リソースを作成
-	if (logManager_) {
-		logManager_->Log("CreateFromOBJ : Creating transformationMatrixResource");
-	}
-	// 球用のTransformationMatrix用のリソースを作る。TransformationMatrix 1つ分のサイズを用意する
-	model->transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
-	// データを書き込む
-	// 書き込むためのアドレスを取得
-	model->transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->transformationMatrixData_));
-	// 単位行列を書き込んでおく
-	model->transformationMatrixData_->WVP = MakeIdentity4x4();
-	model->transformationMatrixData_->World = MakeIdentity4x4();
-
 	// OBJが無事に作成されたログを出す
 	if (logManager_) {
 		logManager_->Log("CreateFromOBJ : Success loaded OBJ file: " + filename + objFilename);
@@ -262,16 +229,16 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 }
 
 // 描画
-void Model::Draw(const WorldTransform& worldTrasform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
+void Model::Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
 
-	// 変更した内容を適応
-	transformationMatrixData_->WVP = Multiply(worldTrasform.GetWorldMatrix(), VPMatrix);
+	// カメラ座標に変換
+	worldTransform.SetWVPMatrix(VPMatrix);
 
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList_->IASetIndexBuffer(&indexBufferView_);
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	commandList_->SetGraphicsRootConstantBufferView(1, worldTransform.GetTransformResource()->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootDescriptorTable(2, textureManager_->GetTextureSrvHandlesGPU(textureHandle));
 	if (totalIndices_ != 0) {
 		commandList_->DrawIndexedInstanced(totalIndices_, 1, 0, 0, 0);
@@ -291,7 +258,7 @@ Model::ModelData Model::LoadObjeFile(const std::string& directoryPath, const std
 	std::vector<Vector3> normals; // 法線
 	std::vector<Vector2> texcoords; // テクスチャ座標
 	std::string line; // ファイルから読んだ1行を格納するもの
-	std::ifstream file(directoryPath + "/" + filename + objFilename);
+	std::ifstream file(directoryPath + "/" + filename + "/" + objFilename);
 	assert(file.is_open());
 
 	// 頂点情報を取得
@@ -347,7 +314,7 @@ Model::ModelData Model::LoadObjeFile(const std::string& directoryPath, const std
 			std::string materialFilename;
 			s >> materialFilename;
 			// 基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
-			modelData.material = LoadMaterialTemplateFile(directoryPath, filename + materialFilename);
+			modelData.material = LoadMaterialTemplateFile(directoryPath, filename + "/" + materialFilename);
 		}
 	}
 	return modelData;
@@ -402,10 +369,6 @@ VertexData Model::ParseVertex(
 	Vector3 normal = normals[indices[2] - 1];
 
 	return { position, texcoord, normal };
-}
-
-void Model::SetTransformationMatrix(const Matrix4x4& worldMatrix) {
-	this->transformationMatrixData_->WVP = worldMatrix;
 }
 
 void Model::SetColor(const Vector4& color) {
