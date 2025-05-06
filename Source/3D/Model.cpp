@@ -213,8 +213,8 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
 	// 書き込むためのアドレスを取得
 	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
-	// 白色に設定
-	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	// 色を設定
+	model->materialData_->color = modelData.material.color;
 	// Lightingするのでtureに設定する
 	model->materialData_->enableLighting = false;
 	// UVTransform行列を初期化
@@ -338,6 +338,11 @@ Model::MaterialData Model::LoadMaterialTemplateFile(const std::string& directory
 			s >> textureFilename;
 			// 連結してファイルパスにする
 			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+		} else if (identifier == "Kd") {
+			// 色のデータを取得
+			s >> materialData.color.x >> materialData.color.y >> materialData.color.z;
+			// アルファ値は1にしておく
+			materialData.color.w = 1.0f;
 		}
 	}
 	return materialData;
