@@ -69,7 +69,7 @@ Sprite* Sprite::Create(Vector2 position, Vector2 size,  Vector4 color) {
 	indexDataSprite[3] = 1;  indexDataSprite[4] = 3;  indexDataSprite[5] = 2;
 
 	// Sprite用のマテリアルリソースを作る
-	sprite->materialResourceSprite_ = CreateBufferResource(device_, sizeof(Material));
+	sprite->materialResourceSprite_ = CreateBufferResource(device_, sizeof(Material::MaterialData));
 	// 書き込むためのアドレスを取得
 	sprite->materialResourceSprite_->Map(0, nullptr, reinterpret_cast<void**>(&sprite->materialDataSprite_));
 	// 色の設定

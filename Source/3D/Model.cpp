@@ -104,17 +104,9 @@ Model* Model::CreateSphere(uint32_t subdivision) {
 		}
 	}
 
-	// マテリアルリソースを作成
-	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
-	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	// 書き込むためのアドレスを取得
-	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
-	// 白色に設定
-	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	// Lightingするのでtureに設定する
-	model->materialData_->enableLighting = true;
-	// UVTransform行列を初期化
-	model->materialData_->uvTransform = MakeIdentity4x4();
+	// マテリアルを作成
+	model->defaultMaterial_ = std::make_unique<Material>();
+	model->defaultMaterial_->Initialize({1.0f,1.0f,1.0f,1.0f},false);
 
 	return model;
 }
@@ -158,16 +150,9 @@ Model* Model::CreateTrianglePlane() {
 	vertexData[2].texcoord = { 1.0f,1.0f };
 	vertexData[2].normal = { vertexData[2].position.x, vertexData[2].position.y, vertexData[2].position.z };
 
-	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
-	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	// 書き込むためのアドレスを取得
-	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
-	// 白色に設定
-	model->materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	// Lightingするのでtureに設定する
-	model->materialData_->enableLighting = false;
-	// UVTransform行列を初期化
-	model->materialData_->uvTransform = MakeIdentity4x4();
+	// マテリアルを作成
+	model->defaultMaterial_ = std::make_unique<Material>();
+	model->defaultMaterial_->Initialize({ 1.0f,1.0f,1.0f,1.0f }, false);
 
 	return model;
 }
@@ -205,20 +190,9 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 	model->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));// 書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());// 頂点データをリソースにコピー
 
-	// マテリアルリソースを作成
-	if (logManager_) {
-		logManager_->Log("CreateFromOBJ : Creating materialResource");
-	}
-	// マテリアル用のリソースを作る。color1つ分のサイズを用意する
-	model->materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	// 書き込むためのアドレスを取得
-	model->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->materialData_));
-	// 色を設定
-	model->materialData_->color = modelData.material.color;
-	// Lightingするのでtureに設定する
-	model->materialData_->enableLighting = false;
-	// UVTransform行列を初期化
-	model->materialData_->uvTransform = MakeIdentity4x4();
+	// マテリアルを作成
+	model->defaultMaterial_ = std::make_unique<Material>();
+	model->defaultMaterial_->Initialize(modelData.material.color, false);
 
 	// OBJが無事に作成されたログを出す
 	if (logManager_) {
@@ -229,7 +203,7 @@ Model* Model::CreateFromOBJ(const std::string& objFilename, const std::string& f
 }
 
 // 描画
-void Model::Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix) {
+void Model::Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix, const Material* material) {
 
 	// カメラ座標に変換
 	worldTransform.SetWVPMatrix(VPMatrix);
@@ -237,7 +211,12 @@ void Model::Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, 
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList_->IASetIndexBuffer(&indexBufferView_);
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	// マテリアルが設定されていなければデフォルトのマテリアルを使う
+	if (material == nullptr) {
+		commandList_->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialResource()->GetGPUVirtualAddress());
+	} else {
+		commandList_->SetGraphicsRootConstantBufferView(0, material->GetMaterialResource()->GetGPUVirtualAddress());
+	}
 	commandList_->SetGraphicsRootConstantBufferView(1, worldTransform.GetTransformResource()->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootDescriptorTable(2, textureManager_->GetTextureSrvHandlesGPU(textureHandle));
 	if (totalIndices_ != 0) {
@@ -376,14 +355,14 @@ VertexData Model::ParseVertex(
 	return { position, texcoord, normal };
 }
 
-void Model::SetColor(const Vector4& color) {
-	this->materialData_->color = color;
+void  Model::SetDefaultColor(const Vector4& color) {
+	defaultMaterial_->SetColor(color);
 }
 
-void Model::SetLightOn(const bool isLightOn) {
-	this->materialData_->enableLighting = isLightOn;
+void  Model::SetDefaultIsEnableLight(const bool& isEnableLight) {
+	defaultMaterial_->SetEnableLighting(isEnableLight);
 }
 
-void Model::SetUvMatrix(const Matrix4x4& uvMatrix) {
-	this->materialData_->uvTransform = uvMatrix;
+void  Model::SetDefaultUVMatrix(const Matrix4x4& uvMatrix) {
+	defaultMaterial_->SetUVMatrix(uvMatrix);
 }

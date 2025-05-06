@@ -107,6 +107,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\3D\Camera.cpp" />
     <ClCompile Include="Source\3D\DebugCamera.cpp" />
     <ClCompile Include="Source\3D\DirectionalLight.cpp" />
+    <ClCompile Include="Source\3D\Material.cpp" />
     <ClCompile Include="Source\3D\Model.cpp" />
     <ClCompile Include="Source\3D\WorldTransform.cpp" />
     <ClCompile Include="Source\Audio\AudioManager.cpp" />

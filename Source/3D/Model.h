@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d12.h>
 #include"VertexData.h"
-#include"Material.h"
 #include"Source/Math/Vector4.h"
 #include"Source/Math/Vector3.h"
 #include"Source/Math/Vector2.h"
@@ -13,6 +12,7 @@
 #include <wrl.h>
 
 #include"Camera.h"
+#include"Material.h"
 
 namespace GameEngine {
 
@@ -70,8 +70,8 @@ namespace GameEngine {
 		/// <param name="worldMatrix">ワールド行列</param>
 		/// <param name="directionalLightResource">光源</param>
 		/// <param name="textureHandle">テクスチャハンドル</param>
-		/// <param name="VPMatrix"></param>
-		void Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix);
+		/// <param name="material">マテリアル : 何の書かなければデフォルトのマテリアルを適応</param>
+		void Draw(WorldTransform& worldTransform, const uint32_t& textureHandle, const Matrix4x4& VPMatrix,const Material* material = nullptr);
 
 		/// <summary>
 		/// モデルに光源を適応させる
@@ -80,22 +80,22 @@ namespace GameEngine {
 		void DrawLight(ID3D12Resource* directionalLightResource);
 
 		/// <summary>
-		/// 3Dモデルの色を変更
+		/// デフォルトの色を設定
 		/// </summary>
 		/// <param name="color"></param>
-		void SetColor(const Vector4& color);
+		void SetDefaultColor(const Vector4& color);
 
 		/// <summary>
-		/// ライトを当てるか決める処理
+		/// デフォオルトの光源の有無を設定
 		/// </summary>
-		/// <param name="isLightOn">trueでライトが点く</param>
-		void SetLightOn(const bool isLightOn);
+		/// <param name="isEnableLight"></param>
+		void SetDefaultIsEnableLight(const bool& isEnableLight);
 
 		/// <summary>
-		/// UV座標を変更する処理
+		/// デフォルトのuvMatrixを設定
 		/// </summary>
 		/// <param name="uvMatrix"></param>
-		void SetUvMatrix(const Matrix4x4& uvMatrix);
+		void SetDefaultUVMatrix(const Matrix4x4& uvMatrix);
 
 	private:
 
@@ -131,7 +131,6 @@ namespace GameEngine {
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 		Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
-		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
@@ -139,7 +138,7 @@ namespace GameEngine {
 		uint32_t totalVertices_ = 0;
 		uint32_t totalIndices_ = 0;
 
-		// マテリアルにデータを書き込む
-		Material* materialData_ = nullptr;
+		// デフォルトのマテリアル
+		std::unique_ptr<Material> defaultMaterial_ = nullptr;
 	};
 }

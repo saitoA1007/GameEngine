@@ -103,6 +103,9 @@
     <ClCompile Include="Source\3D\WorldTransform.cpp">
       <Filter>Source\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Source\3D\Material.cpp">
+      <Filter>Source\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\WindowsApp.h">
