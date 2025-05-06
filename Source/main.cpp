@@ -65,7 +65,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	//=================================================================
 
 	// 画像をロード
-	//uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
 	uint32_t axisGH = textureManager->Load("Resources/axis/axis.jpg");
 
 	// 軸方向表示
