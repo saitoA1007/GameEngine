@@ -56,6 +56,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	AxisIndicator::StaticInitialize(dxCommon->GetCommandList());
 	// ワールドトランスフォームの初期化
 	WorldTransform::StaticInitialize(dxCommon->GetDevice());
+	// マテリアルの初期化
+	Material::StaticInitialize(dxCommon->GetDevice());
 #pragma endregion
 
 	//=================================================================
@@ -120,9 +122,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		// Axisの操作
 		if (ImGui::TreeNode("Axis")) {
 			ImGui::ColorEdit3("AxisModelColor", &color.x);
-			axis->SetColor(color);
+			axis->SetDefaultColor(color);
 			ImGui::Checkbox("AxisLight", &isAxisLightOn);
-			axis->SetLightOn(isAxisLightOn);
+			axis->SetDefaultIsEnableLight(isAxisLightOn);
 			ImGui::DragFloat3("AxisTranslate", &transform.translate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("Axisrotate", &transform.rotate.x, 0.01f, -10.0f, 10.0f);
 			ImGui::DragFloat3("AxisScale", &transform.scale.x, 0.01f, -10.0f, 10.0f);

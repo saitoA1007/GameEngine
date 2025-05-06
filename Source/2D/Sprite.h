@@ -99,7 +99,7 @@ namespace GameEngine {
 		// Sprite用のマテリアルリソース
 		Microsoft::WRL::ComPtr<ID3D12Resource> materialResourceSprite_;
 		// マテリアルにデータを書き込む
-		Material* materialDataSprite_ = nullptr;
+		Material::MaterialData* materialDataSprite_ = nullptr;
 
 		// Sprite用のTransformationMatrix用のリソース
 		Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatirxResourceSprite_;
