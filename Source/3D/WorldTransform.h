@@ -13,13 +13,19 @@ namespace GameEngine {
 		~WorldTransform() = default;
 
 		/// <summary>
+		/// 静的初期化
+		/// </summary>
+		/// <param name="device"></param>
+		static void StaticInitialize(ID3D12Device* device);
+
+		/// <summary>
 		/// 初期化
 		/// </summary>
 		/// <param name="transform">Scale,Rotate,Translate : 各型Vector3</param>
-		void Initialize(const Transform& transform, ID3D12Device* device);
+		void Initialize(const Transform& transform);
 
 		/// <summary>
-		/// ワールド行列の更新処理
+		/// SRTを適応
 		/// </summary>
 		void UpdateTransformMatrix();
 
@@ -29,8 +35,15 @@ namespace GameEngine {
 	public:
 
 		void SetScale(const Vector3& scale) { transform_.rotate = scale; }
+
+		void SetRotateY(const float& rotateY) { transform_.rotate.y = rotateY; }
 		void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
-		void SetTranslate(const Vector3& translate) { transform_.rotate = translate; }
+		Vector3 GetRotate() { return transform_.rotate; }
+
+		void SetTranslateY(const float& translateY) { transform_.translate.y = translateY; }
+		void SetTranslate(const Vector3& translate) { transform_.translate = translate; }
+		Vector3 GetTranslate() const { return transform_.translate; }
+
 		void SetTransform(const Transform transform) { transform_ = transform; }
 
 		void SetWorldMatrix(const Matrix4x4 worldMatrix) { worldMatrix_ = worldMatrix; }
@@ -47,8 +60,10 @@ namespace GameEngine {
 		WorldTransform(const WorldTransform&) = delete;
 		WorldTransform& operator=(const WorldTransform&) = delete;
 
+		static ID3D12Device* device_;
+
 		Matrix4x4 worldMatrix_;
-		Transform transform_;
+		Transform transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_;
 		TransformationMatrix* transformationMatrixData_ = nullptr;

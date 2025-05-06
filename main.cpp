@@ -50,12 +50,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 画像の初期化
 	Sprite::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), windowsApp->kWindowWidth, windowsApp->kWindowHeight);
-
 	// 3dを描画する処理の初期化
 	Model::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList(), textureManager.get(), logManager.get());
-
 	// 軸方向表示の初期化
 	AxisIndicator::StaticInitialize(dxCommon->GetCommandList());
+	// ワールドトランスフォームの初期化
+	WorldTransform::StaticInitialize(dxCommon->GetDevice());
 #pragma endregion
 
 	//=================================================================
@@ -64,12 +64,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 画像をロード
 	//uint32_t uvCheckerGH = textureManager->Load("Resources/uvChecker.png");
-	//uint32_t cubeGH = textureManager->Load("Resources/cube/cube.jpg");
 	uint32_t axisGH = textureManager->Load("Resources/axis/axis.jpg");
 
 	// 軸方向表示
 	std::unique_ptr<AxisIndicator> axisIndicator = std::make_unique<AxisIndicator>();
-	axisIndicator->Initialize("axis.obj", dxCommon->GetDevice());
+	axisIndicator->Initialize("axis.obj");
 
 	// カメラ
 	Camera camera;
@@ -81,18 +80,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 	// 3Dモデル
 	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	WorldTransform* worldTransform = new WorldTransform();
-	worldTransform->Initialize(transform,dxCommon->GetDevice());
+	worldTransform->Initialize(transform);
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	bool isAxisLightOn = false;
 	Model* axis = Model::CreateFromOBJ("axis.obj", "axis");
-
-	// 3Dモデル
-	Transform transformCube{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
-	WorldTransform* worldTransformCube = new WorldTransform();
-	worldTransformCube->Initialize(transformCube,dxCommon->GetDevice());
-	Vector4 colorCube = { 1.0f,1.0f,1.0f,1.0f };
-	bool isCubeLightOn = false;
-	Model* cube = Model::CreateFromOBJ("cube.obj", "cube");
 	
 	// 平行根源
 	DirectionalLight* directionalLight = new DirectionalLight();
@@ -138,18 +129,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 			worldTransform->SetTransform(transform);
 			ImGui::TreePop();
 		}
-		// Cubeの操作
-		if (ImGui::TreeNode("Cube")) {
-			ImGui::ColorEdit3("\nCubeModelColor", &colorCube.x);
-			cube->SetColor(colorCube);
-			ImGui::Checkbox("CubeLight", &isCubeLightOn);
-			cube->SetLightOn(isCubeLightOn);
-			ImGui::DragFloat3("CubeTranslate", &transformCube.translate.x, 0.01f, -10.0f, 10.0f);
-			ImGui::DragFloat3("Cuberotate", &transformCube.rotate.x, 0.01f, -10.0f, 10.0f);
-			ImGui::DragFloat3("CubeScale", &transformCube.scale.x, 0.01f, -10.0f, 10.0f);
-			worldTransformCube->SetTransform(transformCube);
-			ImGui::TreePop();
-		}
 		// 平行根源の操作
 		if (ImGui::TreeNode("Light")) {
 			// 光の色を変更
@@ -168,7 +147,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 		// ワールド行列を更新
 		worldTransform->UpdateTransformMatrix();
-		worldTransformCube->UpdateTransformMatrix();
 
 		// 軸を回転させる処理
 		axisIndicator->Update(debugCamera.GetRotateMatrix());
@@ -187,10 +165,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 		axis->DrawLight(directionalLight->GetResource());
 		axis->Draw(*worldTransform, axisGH, debugCamera.GetVPMatrix());
 
-		// Cubeモデルを描画
-		//cube->DrawLight(directionalLight->GetResource());
-		//cube->Draw(*worldTransformCube,cubeGH, debugCamera.GetVPMatrix());
-
 		// 軸を描画
 		axisIndicator->Draw(axisGH);
 
@@ -202,10 +176,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
 	// 3Dモデルの解放
 	delete axis;
-	delete cube;
 	// ワールド行列データを解放
 	delete worldTransform;
-	delete worldTransformCube;
 
 	// ライトの解放
 	delete directionalLight;
