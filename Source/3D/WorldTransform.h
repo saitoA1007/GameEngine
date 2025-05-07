@@ -66,6 +66,7 @@ namespace GameEngine {
 		Transform transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_;
+		// トラスフォームにデータを書き込む
 		TransformationMatrix* transformationMatrixData_ = nullptr;
 	};
 }
