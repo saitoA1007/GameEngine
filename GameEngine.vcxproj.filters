@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source">
-      <UniqueIdentifier>{cef2a839-0eb2-4977-be36-c0cd283c3df0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Core">
-      <UniqueIdentifier>{0e606d8c-0f1b-4fdb-bea5-2d9c366f732a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Math">
-      <UniqueIdentifier>{0c8eacc4-225a-4035-96ce-8ae1d689bfbd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{4fa0d5cd-d2c3-480d-bfe0-5d4db60dab2c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Common">
+    <Filter Include="EngineSource">
+      <UniqueIdentifier>{cef2a839-0eb2-4977-be36-c0cd283c3df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineSource\Core">
+      <UniqueIdentifier>{0e606d8c-0f1b-4fdb-bea5-2d9c366f732a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineSource\Math">
+      <UniqueIdentifier>{0c8eacc4-225a-4035-96ce-8ae1d689bfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineSource\Common">
       <UniqueIdentifier>{400e6124-058b-4254-aaf7-5cd1c5e71aec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{f78567d7-d60e-4236-9066-ba11f9ff40de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\3D">
+    <Filter Include="EngineSource\3D">
       <UniqueIdentifier>{9aa3ca0c-d9ef-48a6-8a4c-3357255fd816}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\2D">
+    <Filter Include="EngineSource\2D">
       <UniqueIdentifier>{e343713c-c02b-4162-9a68-dd3483fc8aec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Input">
+    <Filter Include="EngineSource\Input">
       <UniqueIdentifier>{c0c8add6-14da-43e8-af9e-60bbee9a91ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Audio">
+    <Filter Include="EngineSource\Audio">
       <UniqueIdentifier>{0890f0fb-687d-4a2e-a053-3e8ae97d2901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{c457e931-197e-4e3e-a909-e7c80043086f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{219c9d90-9e6c-46df-b7e9-41a46241ee9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Core\WindowsApp.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -57,62 +57,80 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\DirectXCommon.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="EngineSource\2D\ImGuiManager.cpp">
+      <Filter>EngineSource\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\LogManager.cpp">
-      <Filter>Source\Common</Filter>
+    <ClCompile Include="EngineSource\2D\Sprite.cpp">
+      <Filter>EngineSource\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\GraphicsPipeline.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="EngineSource\3D\AxisIndicator.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\Model.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\3D\Camera.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\MyMath.cpp">
-      <Filter>Source\Math</Filter>
+    <ClCompile Include="EngineSource\3D\DebugCamera.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\Camera.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\3D\DirectionalLight.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\DirectionalLight.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\3D\Material.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\TextureManager.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="EngineSource\3D\Model.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\2D\ImGuiManager.cpp">
-      <Filter>Source\2D</Filter>
+    <ClCompile Include="EngineSource\3D\WorldTransform.cpp">
+      <Filter>EngineSource\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Input\InPut.cpp">
-      <Filter>Source\Input</Filter>
+    <ClCompile Include="EngineSource\Audio\AudioManager.cpp">
+      <Filter>EngineSource\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio\AudioManager.cpp">
-      <Filter>Source\Audio</Filter>
+    <ClCompile Include="EngineSource\Common\LogManager.cpp">
+      <Filter>EngineSource\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\2D\Sprite.cpp">
-      <Filter>Source\2D</Filter>
+    <ClCompile Include="EngineSource\Core\DirectXCommon.cpp">
+      <Filter>EngineSource\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\DebugCamera.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\Core\GraphicsPipeline.cpp">
+      <Filter>EngineSource\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\AxisIndicator.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\Core\TextureManager.cpp">
+      <Filter>EngineSource\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\WorldTransform.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\Core\WindowsApp.cpp">
+      <Filter>EngineSource\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\3D\Material.cpp">
-      <Filter>Source\3D</Filter>
+    <ClCompile Include="EngineSource\Input\InPut.cpp">
+      <Filter>EngineSource\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Source\main.cpp">
+    <ClCompile Include="EngineSource\Math\EasingManager.cpp">
+      <Filter>EngineSource\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSource\Math\MyMath.cpp">
+      <Filter>EngineSource\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\GameScene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\Particles.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\RandomGenerator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\SkyDome.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\Triangle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Core\WindowsApp.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -137,98 +155,119 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\DirectXCommon.h">
-      <Filter>Source\Core</Filter>
+    <ClInclude Include="EngineSource\2D\ImGuiManager.h">
+      <Filter>EngineSource\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\ConvertString.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\2D\Sprite.h">
+      <Filter>EngineSource\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DepthStencilTexture.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\3D\AxisIndicator.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DescriptorHandle.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\3D\Camera.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DescriptorHeap.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\3D\DebugCamera.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\LogManager.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\3D\DirectionalLight.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\ResourceLeakChecker.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\3D\Material.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\GraphicsPipeline.h">
-      <Filter>Source\Core</Filter>
+    <ClInclude Include="EngineSource\3D\Model.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector2.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\3D\VertexData.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector3.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\3D\WorldTransform.h">
+      <Filter>EngineSource\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector4.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\Audio\AudioManager.h">
+      <Filter>EngineSource\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Matrix4x4.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\Common\ConvertString.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\TransformationMatrix.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\Common\CrashHandle.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\VertexData.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Common\CreateBufferResource.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\Material.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Common\DepthStencilTexture.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\Model.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Common\DescriptorHandle.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\CreateBufferResource.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\Common\DescriptorHeap.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\MyMath.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\Common\LogManager.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\Camera.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Common\ResourceLeakChecker.h">
+      <Filter>EngineSource\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\CrashHandle.h">
-      <Filter>Source\Common</Filter>
+    <ClInclude Include="EngineSource\Core\DirectXCommon.h">
+      <Filter>EngineSource\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\DirectionalLight.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Core\GraphicsPipeline.h">
+      <Filter>EngineSource\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\TextureManager.h">
-      <Filter>Source\Core</Filter>
+    <ClInclude Include="EngineSource\Core\TextureManager.h">
+      <Filter>EngineSource\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\2D\ImGuiManager.h">
-      <Filter>Source\2D</Filter>
+    <ClInclude Include="EngineSource\Core\WindowsApp.h">
+      <Filter>EngineSource\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Input\InPut.h">
-      <Filter>Source\Input</Filter>
+    <ClInclude Include="EngineSource\Input\InPut.h">
+      <Filter>EngineSource\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Audio\AudioManager.h">
-      <Filter>Source\Audio</Filter>
+    <ClInclude Include="EngineSource\Math\EasingManager.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\2D\Sprite.h">
-      <Filter>Source\2D</Filter>
+    <ClInclude Include="EngineSource\Math\Matrix4x4.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\DebugCamera.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Math\MyMath.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Transform.h">
-      <Filter>Source\Math</Filter>
+    <ClInclude Include="EngineSource\Math\Transform.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\AxisIndicator.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Math\TransformationMatrix.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\3D\WorldTransform.h">
-      <Filter>Source\3D</Filter>
+    <ClInclude Include="EngineSource\Math\Vector2.h">
+      <Filter>EngineSource\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameEngine.h">
-      <Filter>Source\Core</Filter>
+    <ClInclude Include="EngineSource\Math\Vector3.h">
+      <Filter>EngineSource\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSource\Math\Vector4.h">
+      <Filter>EngineSource\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\GameScene.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\Particles.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\RandomGenerator.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\SkyDome.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\Triangle.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\GameEngine.h">
+      <Filter>EngineSource\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -237,16 +276,16 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Source\Shader\Object3d.VS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Object3d.PS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
+    <None Include="Resources\Shaders\Object3d.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Shader\Object3d.hlsli">
-      <Filter>Shader</Filter>
-    </None>
+    <FxCompile Include="Resources\Shaders\Object3d.PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Object3d.VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
