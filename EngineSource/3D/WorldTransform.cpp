@@ -30,4 +30,5 @@ void WorldTransform::UpdateTransformMatrix() {
 
 void WorldTransform::SetWVPMatrix(const Matrix4x4& VPMatrix) {
 	transformationMatrixData_->WVP = Multiply(worldMatrix_, VPMatrix);
+	transformationMatrixData_->World = worldMatrix_;
 }

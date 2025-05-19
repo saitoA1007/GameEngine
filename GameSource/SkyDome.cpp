@@ -18,10 +18,11 @@ void SkyDome::Initialize(GameEngine::Model* model, const uint32_t& textureHandle
 	camera_ = camera;
 
 	// 色を設定
-	skyDomeModel_->SetDefaultColor({ 0.0f,0.0f,0.0f,1.0f });
+	skyDomeModel_->SetDefaultColor({ 0.0f,0.0078f,0.0235f,1.0f });
 }
 
 void SkyDome::Update() {
+
 	// ワールド行列を更新
 	worldTransform_.UpdateTransformMatrix();
 }
