@@ -10,16 +10,18 @@
 
 class Particles {
 public:
-
+	// パーティクルデータ
 	struct Particle {
-		GameEngine::WorldTransform worldTransform;
-		GameEngine::Material material;
-		Vector3 color;
-		Vector3 velocity;
-		float thetaSpeed;
-
-		bool isAlive = false;
-		float AliveTimer = 4.0f;
+		GameEngine::WorldTransform worldTransform; // ワールド行列
+		GameEngine::Material material; // マテリアル
+		Vector3 color; // 色
+		Vector3 velocity; // 移動速度
+		float thetaSpeed; // 回転速度
+		Transform uvtransform; // uvのトラスフォーム
+		Vector3 uvScroll; // uvのスクロール量
+		uint32_t textureHandle; // テクスチャ
+		bool isAlive = false; // 生存フラグ
+		float AliveTimer = 4.0f; // 生存タイマー
 	};
 
 public:
@@ -30,7 +32,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="textureHandle"></param>
 	/// <param name="camera"></param>
-	void Initialize(GameEngine::Model* model, const uint32_t& textureHandle, const GameEngine::Camera* camera);
+	void Initialize(GameEngine::Model* model, const uint32_t textureHandle[2], const GameEngine::Camera* camera);
 
 	/// <summary>
 	/// 更新処理
@@ -45,7 +47,7 @@ public:
 private:
 
 	// テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
+	uint32_t textureHandle_[2] = {};
 
 	// カメラ
 	const GameEngine::Camera* camera_;
@@ -79,7 +81,6 @@ private:
 	static inline const float kEmitterMaxTime = 8.0f;
 	static inline const float kEmitterStartPos = -5.0f;
 	static inline const float kEmitterEndPos = 18.0f;
-
 private:
 
 	/// <summary>

@@ -47,7 +47,8 @@ void GameScene::Initialize(GameEngine::TextureManager* textureManager, GameEngin
 	skyDome_->Initialize(skyDomeModel_, skyDomeTextureHandle_, camera_.get());
 
 	// パーティクルテクスチャを作成
-	particleTextureHandle_ = textureManager->Load("Resources/white4x4.png");
+	particleTextureHandle_[0] = textureManager->Load("Resources/gradation.png");
+	particleTextureHandle_[1] = textureManager->Load("Resources/split.png");
 	// パーティクルのモデルを作成
 	paritcleModel_ = Model::CreateFromOBJ("triangular.obj","Triangular");
 	// particlesクラス
@@ -70,7 +71,7 @@ void GameScene::Initialize(GameEngine::TextureManager* textureManager, GameEngin
 	directionalLight_->Initialize(dxCommon->GetDevice(), lightColor_, lightDir_, intensity_);
 
 	// 画像クラスを作成
-	sprite_ = Sprite::Create({ 0.0f,0.0f }, { 1280.0f,720.0f }, { 0.133f,0.090f,0.247f,0.08f });
+	sprite_ = Sprite::Create({ 0.0f,0.0f }, { 1280.0f,720.0f }, { 0.133f,0.090f,0.247f,0.09f });
 	spriteTextureHandle_ = textureManager->Load("Resources/blurring.png");
 }
 

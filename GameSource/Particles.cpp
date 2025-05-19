@@ -9,7 +9,7 @@
 
 using namespace GameEngine;
 
-void Particles::Initialize(GameEngine::Model* model, const uint32_t& textureHandle, const GameEngine::Camera* camera) {
+void Particles::Initialize(GameEngine::Model* model, const uint32_t textureHandle[2], const GameEngine::Camera* camera) {
 
 	// NULLチェック
 	assert(model);
@@ -17,7 +17,8 @@ void Particles::Initialize(GameEngine::Model* model, const uint32_t& textureHand
 	// モデルを取得
 	particleModel_ = model;
 	// テクスチャを取得
-	textureHandle_ = textureHandle;
+	textureHandle_[0] = textureHandle[0];
+	textureHandle_[1] = textureHandle[1];
 	// カメラを取得
 	camera_ = camera;
 
@@ -28,8 +29,9 @@ void Particles::Initialize(GameEngine::Model* model, const uint32_t& textureHand
 	for (auto& particle : particles_) {
 		particle.worldTransform.Initialize({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} });
 		particle.material.Initialize({1.0f,1.0f,1.0f,1.0f}, true);
+		particle.uvtransform = { {1.0f,1.0f,1.0f}, {0.0f,0.0f,0.0f}, { 0.0f,0.0f,0.0f } };
+		particle.material.SetUVMatrix(MakeAffineMatrix(particle.uvtransform.scale, particle.uvtransform.rotate, particle.uvtransform.translate));
 		particle.velocity = {};
-
 		particle.isAlive = false;
 		particle.AliveTimer = kParticleMaxTime;
 	}
@@ -94,12 +96,29 @@ void Particles::Update() {
 				int rd = rand_.GetInt(0, 1);
 				// 番号によって使う色を返す
 				if (rd == 0) {
-					color = { 0.847f, 0.922f, 0.290f };
+					color = { 0.38f,0.866f,0.149f };
 				} else if (rd == 1) {
 					color = { 0.290f, 0.902f, 0.922f };
 				}
 				particles_[i].color = color;
 				particles_[i].material.SetColor({ particles_[i].color.x,particles_[i].color.y,particles_[i].color.z,1.0f });
+
+				// スクロール速度を設定
+				int scrollSpeed = rand_.GetInt(0, 2);
+				if (scrollSpeed == 0) {
+					particles_[i].uvScroll = { 0.005f,0.005f,0.0f };
+				} else if (scrollSpeed == 1) {
+					particles_[i].uvScroll = { -0.005f,-0.005f,0.0f };
+				} else if (scrollSpeed == 2) {
+					particles_[i].uvScroll = { 0.005f,-0.005f,0.0f };
+				}
+				particles_[i].uvtransform.scale = { 0.5f,0.5f,1.0f };
+
+				// テクスチャ座標
+				particles_[i].uvtransform.translate = {0.0f,0.0f,0.0f};
+
+				// テクスチャを決める
+				particles_[i].textureHandle = textureHandle_[rand_.GetInt(0, 1)];
 				if (i % 2 == 0) {
 					break;
 				}
@@ -126,6 +145,10 @@ void Particles::Update() {
 		// 色の処理
 		particles_[i].material.SetAplha(Lerp(0.0f,1.0f, EaseInOut(particles_[i].AliveTimer / 4.0f)));
 
+		// UVを動かす処理
+		particles_[i].uvtransform.translate += particles_[i].uvScroll;
+		particles_[i].material.SetUVMatrix(MakeAffineMatrix(particles_[i].uvtransform.scale, particles_[i].uvtransform.rotate, particles_[i].uvtransform.translate));
+
 		// 生存タイマーが0の時初期化する
 		if (particles_[i].AliveTimer <= 0.0f) {
 
@@ -149,7 +172,7 @@ void Particles::Draw(ID3D12Resource* directionalLightResource) {
 		// 生存フラグがtrueでなければ描画しない
 		if (!particle.isAlive) continue;
 		particleModel_->DrawLight(directionalLightResource);
-		particleModel_->Draw(particle.worldTransform, textureHandle_, camera_->GetVPMatrix(), &particle.material);
+		particleModel_->Draw(particle.worldTransform, particle.textureHandle, camera_->GetVPMatrix(), &particle.material);
 	}
 }
 

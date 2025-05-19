@@ -66,7 +66,7 @@ private:
 	// パーティクルのモデル
 	GameEngine::Model* paritcleModel_ = nullptr;
 	// パーティクルテクスチャ
-	uint32_t particleTextureHandle_ = 0u;
+	uint32_t particleTextureHandle_[2] = {};
 
 	// 三角形のクラス
 	Triangle* triangle_ = nullptr;
